@@ -1,7 +1,7 @@
-import { SidebarProvider } from "@/components/ui/sidebar"
 import HomeNavbar from "@/modules/home/ui/components/home-navbar";
-import {AppSidebar} from "@/modules/home/ui/components/home-sidebar/app-sidebar";
 import {HomeSidebar} from "@/modules/home/ui/components/home-sidebar";
+import {useEffect, useState} from "react";
+import Command from "@/modules/home/logic/command";
 
 interface HomeLayoutProps {
     children: React.ReactNode
@@ -16,6 +16,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
                     {children}
                 </div>
             </div>
+            <Command />
         </HomeSidebar>
     )
 }
