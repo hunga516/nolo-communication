@@ -28,10 +28,10 @@ const Command = () => {
 
     return (
         <CommandDialog open={open} onOpenChange={setOpen}>
-            <CommandInput placeholder="Type a command or search..." />
+            <CommandInput placeholder="Nhập nội dung tìm kiếm ..." />
             <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup heading="Suggestions">
+                <CommandEmpty>Không tìm thấy kết quả.</CommandEmpty>
+                <CommandGroup heading="Gợi ý">
                     <CommandItem>Calendar</CommandItem>
                     <CommandItem>Search Emoji</CommandItem>
                     <CommandItem>Calculator</CommandItem>
