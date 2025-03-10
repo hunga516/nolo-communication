@@ -1,6 +1,5 @@
 import HomeNavbar from "@/modules/home/ui/components/home-navbar";
 import {HomeSidebar} from "@/modules/home/ui/components/home-sidebar";
-import {useEffect, useState} from "react";
 import Command from "@/modules/home/logic/command";
 
 interface HomeLayoutProps {

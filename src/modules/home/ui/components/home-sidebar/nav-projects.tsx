@@ -1,11 +1,11 @@
 "use client"
 
 import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
+    Folder,
+    Forward,
+    MoreHorizontal,
+    Trash2,
+    type LucideIcon, Frame, PieChart, Map, Store, NotebookPen,
 } from "lucide-react"
 
 import {
@@ -25,20 +25,30 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavProjects({
-  projects,
-}: {
-  projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-}) {
+const projects = [
+      {
+        name: "Cửa hàng",
+        url: "/cua-hang",
+        icon: Store,
+      },
+      {
+        name: "Nhiệm vụ",
+        url: "/nhiem-vu",
+        icon: NotebookPen,
+      },
+      {
+        name: "Bản đồ thế giới",
+        url: "/ban-do-the-gioi",
+        icon: Map,
+      },
+    ]
+
+export function NavProjects() {
   const { isMobile } = useSidebar()
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>Tiện ích</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
