@@ -5,7 +5,7 @@ import {
     Forward,
     MoreHorizontal,
     Trash2,
-    type LucideIcon, Frame, PieChart, Map, Store, NotebookPen,
+    Map, Store, NotebookPen,
 } from "lucide-react"
 
 import {

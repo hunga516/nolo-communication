@@ -26,12 +26,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link";
 
 
 const navMain = [
       {
         title: "Trang chủ",
-        url: "#",
+        url: "/",
         icon: House,
         isActive: false,
       },
@@ -42,7 +43,7 @@ const navMain = [
   },
   {
     title: "Cộng đồng",
-    url: "#",
+    url: "",
     icon: Earth,
     isActive: false,
     items: [
@@ -109,6 +110,7 @@ export function NavMain() {
   console.log(pathname);
 
   return (
+      // inside sidebar
     <SidebarGroup>
       <SidebarGroupLabel>Cộng đồng và giao dịch</SidebarGroupLabel>
       <SidebarMenu>
@@ -123,7 +125,10 @@ export function NavMain() {
               {item.items && item.items.length > 0 ? (
                   // Nếu có submenu => Dùng CollapsibleTrigger
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                        className={`${pathname === item.url ? 'bg-gray-100' : ''}`}
+                        tooltip={item.title}
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -131,12 +136,15 @@ export function NavMain() {
                   </CollapsibleTrigger>
               ) : (
                   // Nếu KHÔNG có submenu => Dùng <a> để chuyển trang
-                  <a href={item.url} className="w-full">
-                    <SidebarMenuButton tooltip={item.title}>
+                  <Link href={item.url} className="w-full">
+                    <SidebarMenuButton
+                        className={`${pathname === item.url ? 'bg-gray-100' : ''}`}
+                        tooltip={item.title}
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                     </SidebarMenuButton>
-                  </a>
+                  </Link>
               )}
 
               {item.items && item.items.length > 0 && (
@@ -145,9 +153,9 @@ export function NavMain() {
                       {item.items.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild>
-                              <a href={subItem.url}>
+                              <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
-                              </a>
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                       ))}
