@@ -4,19 +4,19 @@ import * as React from "react"
 import {
   AudioWaveform,
   Command,
-  GalleryVerticalEnd,
+  GalleryVerticalEnd, Images,
 } from "lucide-react"
 
 import {
   Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarRail,
+  SidebarContent, SidebarGroup,
+  SidebarHeader, SidebarMenu,
+  SidebarRail, SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-import {TeamSwitcher} from "@/modules/home/ui/components/home-sidebar/team-switcher";
 import {NavMain} from "@/modules/home/ui/components/home-sidebar/nav-main";
 import {NavProjects} from "@/modules/home/ui/components/home-sidebar/nav-projects";
+import Image from "next/image";
 
 export const data = {
   teams: [
@@ -42,7 +42,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarGroup>
+          <SidebarTrigger className="p-4"></SidebarTrigger>
+         <SidebarMenu>
+           <Image src="./logo.svg" alt="logo nolo" width={25} height={25}></Image>
+         </SidebarMenu>
+        </SidebarGroup>
       </SidebarHeader>
       <SidebarContent>
         <NavMain/>
