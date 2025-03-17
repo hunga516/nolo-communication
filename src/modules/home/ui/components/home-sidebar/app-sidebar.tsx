@@ -48,17 +48,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-       <SidebarMenu>
-         <SidebarMenuItem>
+      <SidebarHeader className="mx-auto mt-2">
           <Link href="/" className={`flex items-center gap-2`}>
             <Image src="./logo.svg" alt="logo nolo" width={30} height={30}></Image>
             <span className={`font-semibold ${open ? "duration-1000 opacity-100" : "duration-100 opacity-0 pointer-events-none"}`} >NOLO Community</span>
           </Link>
-         </SidebarMenuItem>
-       </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-2">
         <NavMain/>
         <NavProjects />
       </SidebarContent>
