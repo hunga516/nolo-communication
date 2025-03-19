@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   BookOpen,
   ChevronRight,
-  DollarSign, Earth,
+  DollarSign,
+  Earth,
   House,
   MonitorPlay,
   Scroll,
   TrendingUp,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -25,17 +26,16 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import Link from "next/link";
 
-
 const navMain = [
-      {
-        title: "Trang chủ",
-        url: "/",
-        icon: House,
-        isActive: false,
-      },
+  {
+    title: "Trang chủ",
+    url: "/",
+    icon: House,
+    isActive: false,
+  },
   {
     title: "Vi Short",
     url: "/vi-short",
@@ -49,13 +49,13 @@ const navMain = [
     items: [
       {
         title: "Bạn bè",
-        url: "/ban-be"
+        url: "/ban-be",
       },
       {
         title: "Nhóm của bạn",
-        url: "/nhom-cua-ban"
-      }
-    ]
+        url: "/nhom-cua-ban",
+      },
+    ],
   },
   {
     title: "Xu hướng",
@@ -63,54 +63,54 @@ const navMain = [
     icon: TrendingUp,
     isActive: false,
   },
+  {
+    title: "Giao dịch",
+    url: "/giao-dich",
+    icon: DollarSign,
+    auth: true,
+    items: [
       {
-        title: "Giao dịch",
-        url: "/giao-dich",
-        icon: DollarSign,
-        items: [
-          {
-            title: "Đấu giá",
-            url: "/dau-gia",
-          },
-          {
-            title: "Mua bán",
-            url: "/mua-ban",
-          },
-        ],
+        title: "Đấu giá",
+        url: "/dau-gia",
       },
       {
-        title: "Hướng dẫn cài game",
-        url: "/huong-dan-cai-game",
-        icon: BookOpen,
-        items: [
-          {
-            title: "Tải về",
-            url: "/tai-ve",
-          },
-          {
-            title: "Cài đặt",
-            url: "/cai-dat",
-          },
-          {
-            title: "Hướng dẫn cơ bản",
-            url: "/huong-dan-co-ban",
-          },
-        ],
+        title: "Mua bán",
+        url: "/mua-ban",
       },
+    ],
+  },
+  {
+    title: "Hướng dẫn cài game",
+    url: "/huong-dan-cai-game",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Tải về",
+        url: "/tai-ve",
+      },
+      {
+        title: "Cài đặt",
+        url: "/cai-dat",
+      },
+      {
+        title: "Hướng dẫn cơ bản",
+        url: "/huong-dan-co-ban",
+      },
+    ],
+  },
   {
     title: "Hướng dẫn việc làm",
     url: "/huong-dan-viec-lam",
     icon: Scroll,
   },
-    ]
+];
 
 export function NavMain() {
-
   const pathname = usePathname();
   console.log(pathname);
 
   return (
-      // inside sidebar
+    // inside sidebar
     <SidebarGroup>
       <SidebarGroupLabel>Cộng đồng và giao dịch</SidebarGroupLabel>
       <SidebarMenu>
@@ -123,49 +123,49 @@ export function NavMain() {
           >
             <SidebarMenuItem>
               {item.items && item.items.length > 0 ? (
-                  // Nếu có submenu => Dùng CollapsibleTrigger
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton
-                        className={`${pathname === item.url ? 'bg-gray-100' : ''}`}
-                        tooltip={item.title}
-                    >
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
+                // Nếu có submenu => Dùng CollapsibleTrigger
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    className={`${pathname === item.url ? "bg-gray-100" : ""}`}
+                    tooltip={item.title}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
               ) : (
-                  // Nếu KHÔNG có submenu => Dùng <a> để chuyển trang
-                  <Link href={item.url} className="w-full">
-                    <SidebarMenuButton
-                        className={`${pathname === item.url ? 'bg-gray-100' : ''}`}
-                        tooltip={item.title}
-                    >
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </Link>
+                // Nếu KHÔNG có submenu => Dùng <a> để chuyển trang
+                <Link href={item.url} className="w-full">
+                  <SidebarMenuButton
+                    className={`${pathname === item.url ? "bg-gray-100" : ""}`}
+                    tooltip={item.title}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </Link>
               )}
 
               {item.items && item.items.length > 0 && (
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.items.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild>
+                          <Link href={subItem.url}>
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
               )}
             </SidebarMenuItem>
           </Collapsible>
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

@@ -1,14 +1,12 @@
-import {ReactNode} from "react";
-import {AppSidebar} from "@/modules/home/ui/components/home-sidebar/app-sidebar";
-import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
+import { ReactNode } from "react";
+import { AppSidebar } from "@/modules/home/ui/components/home-sidebar/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export const HomeSidebar = ({children}: {children: ReactNode}) => {
-    return (
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-                {children}
-            </SidebarInset>
-        </SidebarProvider>
-    );
-}
+export const HomeSidebar = ({ children }: { children: ReactNode }) => {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
+  );
+};

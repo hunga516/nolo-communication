@@ -1,44 +1,44 @@
-"use client"
+"use client";
 
-import {useEffect, useState} from "react";
-import * as React from "react"
+import { useEffect, useState } from "react";
+import * as React from "react";
 
 import {
-    CommandDialog,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 const Command = () => {
-    const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-                e.preventDefault()
-                setOpen((open) => !open)
-            }
-        }
-        document.addEventListener("keydown", down)
-        return () => document.removeEventListener("keydown", down)
-    }, [])
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
-    return (
-        <CommandDialog open={open} onOpenChange={setOpen}>
-            <CommandInput placeholder="Nhập nội dung tìm kiếm ..." />
-            <CommandList>
-                <CommandEmpty>Không tìm thấy kết quả.</CommandEmpty>
-                <CommandGroup heading="Gợi ý">
-                    <CommandItem>Calendar</CommandItem>
-                    <CommandItem>Search Emoji</CommandItem>
-                    <CommandItem>Calculator</CommandItem>
-                </CommandGroup>
-            </CommandList>
-        </CommandDialog>
-    )
-}
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Nhập nội dung tìm kiếm ..." />
+      <CommandList>
+        <CommandEmpty>Không tìm thấy kết quả.</CommandEmpty>
+        <CommandGroup heading="Gợi ý">
+          <CommandItem>Calendar</CommandItem>
+          <CommandItem>Search Emoji</CommandItem>
+          <CommandItem>Calculator</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
+  );
+};
 
 export default Command;

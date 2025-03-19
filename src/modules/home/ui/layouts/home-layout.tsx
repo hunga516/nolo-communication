@@ -1,23 +1,23 @@
 import HomeNavbar from "@/modules/home/ui/components/home-navbar";
-import {HomeSidebar} from "@/modules/home/ui/components/home-sidebar";
+import { HomeSidebar } from "@/modules/home/ui/components/home-sidebar";
 import Command from "@/modules/home/logic/command";
 
 interface HomeLayoutProps {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
-    return (
-        <HomeSidebar>
-            <div className="w-full">
-                <div>
-                    <HomeNavbar/>
-                    {children}
-                </div>
-            </div>
-            <Command />
-        </HomeSidebar>
-    )
-}
+  return (
+    <HomeSidebar>
+      <div className="w-full">
+        <div>
+          <HomeNavbar />
+          {children}
+        </div>
+      </div>
+      <Command />
+    </HomeSidebar>
+  );
+};
 
-export default HomeLayout
+export default HomeLayout;
