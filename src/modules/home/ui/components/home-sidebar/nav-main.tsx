@@ -107,7 +107,6 @@ const navMain = [
 
 export function NavMain() {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     // inside sidebar
