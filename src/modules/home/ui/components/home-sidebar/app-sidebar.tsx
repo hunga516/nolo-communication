@@ -22,7 +22,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="px-4 mt-2">
+      <SidebarHeader className={`${open && "px-4"} mt-2`}>
         <Link href="/" className={`flex items-center gap-2`}>
           <Image
             src="./logo.svg"
@@ -31,7 +31,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             height={30}
           ></Image>
           <span
-            className={`font-semibold ${open ? "duration-1000 opacity-100" : "duration-100 opacity-0 pointer-events-none"}`}
+            className={`font-semibold ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
           >
             NOLO Community
           </span>
