@@ -28,6 +28,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import {useAuth, useClerk} from "@clerk/nextjs";
 
 const navMain = [
   {
@@ -43,17 +44,20 @@ const navMain = [
   },
   {
     title: "Cộng đồng",
-    url: "",
+    url: "/cong-dong",
     icon: Earth,
     isActive: false,
+    auth: true,
     items: [
       {
         title: "Bạn bè",
-        url: "/ban-be",
+        url: "/cong-dong/ban-be",
+        auth: true,
       },
       {
         title: "Nhóm của bạn",
-        url: "/nhom-cua-ban",
+        url: "/cong-dong/nhom-cua-ban",
+        auth: true,
       },
     ],
   },
@@ -71,11 +75,13 @@ const navMain = [
     items: [
       {
         title: "Đấu giá",
-        url: "/dau-gia",
+        url: "/giao-dich/dau-gia",
+        auth: true,
       },
       {
         title: "Mua bán",
-        url: "/mua-ban",
+        url: "/giao-dich/mua-ban",
+        auth: true,
       },
     ],
   },
@@ -107,6 +113,8 @@ const navMain = [
 
 export function NavMain() {
   const pathname = usePathname();
+  const {isSignedIn} = useAuth();
+  const clerk = useClerk();
 
   return (
     // inside sidebar
@@ -127,6 +135,11 @@ export function NavMain() {
                   <SidebarMenuButton
                     className={`${pathname === item.url ? "bg-gray-100" : ""}`}
                     tooltip={item.title}
+                    onClick={(e) => {
+                      if (!isSignedIn && item.auth){
+                        e.preventDefault()
+                        return clerk.openSignIn()
+                    }}}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -139,6 +152,11 @@ export function NavMain() {
                   <SidebarMenuButton
                     className={`${pathname === item.url ? "bg-gray-100" : ""}`}
                     tooltip={item.title}
+                    onClick={(e) => {
+                      if (!isSignedIn && item.auth){
+                        e.preventDefault()
+                        return clerk.openSignIn()
+                      }}}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>

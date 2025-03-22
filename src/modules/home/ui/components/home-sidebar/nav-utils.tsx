@@ -18,6 +18,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
+import {useAuth, useClerk} from "@clerk/nextjs";
 
 const utils = [
     {
@@ -41,6 +42,8 @@ const utils = [
 
 export function NavUtils() {
     const {isMobile} = useSidebar();
+    const clerk = useClerk();
+    const {isSignedIn} = useAuth();
 
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -48,7 +51,14 @@ export function NavUtils() {
             <SidebarMenu>
                 {utils.map((item) => (
                     <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton asChild>
+                        <SidebarMenuButton
+                            asChild
+                            onClick={(e) => {
+                                if(!isSignedIn && item.auth){
+                                    e.preventDefault()
+                                    return clerk.openSignIn()
+                            }}}
+                        >
                             <a href={item.url}>
                                 <item.icon/>
                                 <span>{item.name}</span>

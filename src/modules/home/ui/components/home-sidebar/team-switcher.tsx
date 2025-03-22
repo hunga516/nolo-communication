@@ -2,11 +2,9 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   ChevronsUpDown,
-  Command,
-  GalleryVerticalEnd,
-  Plus,
+  CarTaxiFront,
+  Ambulance, ShieldUser
 } from "lucide-react";
 
 import {
@@ -14,7 +12,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -28,17 +25,17 @@ import {
 export const jobs = [
   {
     name: "Taxi",
-    logo: GalleryVerticalEnd,
+    logo: CarTaxiFront,
     degree: "Thực tập",
   },
   {
     name: "EMS",
-    logo: AudioWaveform,
+    logo: Ambulance,
     degree: "Chính thức",
   },
   {
     name: "CID",
-    logo: Command,
+    logo: ShieldUser,
     degree: "Quản lý",
   },
 ];
