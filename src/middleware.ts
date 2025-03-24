@@ -1,12 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-const isProtectedRoute = createRouteMatcher(['/cong-dong(.*)', '/giao-dich(.*)','/cua-hang(.*)', '/nhiem-vu(.*)' ])
+const isProtectedRoute = createRouteMatcher(['/cong-dong(.*)','/vi-short', '/giao-dich(.*)','/cua-hang(.*)', '/nhiem-vu(.*)' ])
 
 export default clerkMiddleware(async (auth, req) => {
-
-  // const { userId } = await auth()
-
-  // console.log(userId)
 
   if (isProtectedRoute(req)) {
     await auth.protect({ unauthenticatedUrl: `${req.nextUrl.origin}/sign-in?redirectTo=${req.url}` });
