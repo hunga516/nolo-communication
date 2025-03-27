@@ -8,8 +8,12 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import {trpc} from "@/trpc/server";
 
-export default function Page() {
+export default async function Page() {
+
+  const data = await trpc.hello({text: "Le Ngoc Loc"})
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -39,6 +43,8 @@ export default function Page() {
         </div>
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
+
+      <div>{data.greeting}</div>
     </>
   );
 }
