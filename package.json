@@ -66,6 +66,7 @@
     "recharts": "^2.15.1",
     "server-only": "^0.0.1",
     "sonner": "^2.0.1",
+    "superjson": "^2.2.2",
     "svix": "^1.62.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",

@@ -9,10 +9,19 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {trpc} from "@/trpc/server";
+import {usersTable} from "@/db/schema";
+import {db} from "@/db";
+import {Images} from "lucide-react";
+import Image from "next/image";
 
 export default async function Page() {
 
-  const data = await trpc.hello({text: "Le Ngoc Loc"})
+  // const data = await trpc.hello({text: "Le Ngoc Loc"})
+
+  const data = await db.select().from(usersTable)
+
+  console.log(data[0])
+
 
   return (
     <>
@@ -44,7 +53,7 @@ export default async function Page() {
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
 
-      <div>{data.greeting}</div>
+      <Image src={data[0].imageUrl} alt="hinh anh" width={30} height={30}></Image>
     </>
   );
 }
