@@ -14,12 +14,15 @@ async function main(){
     try {
         const values = categoryNames.map((item)=> ({
             name: item,
-            description: `Xem bài viết liên quan đến ${item}`
+            description: `Xem bài viết liên quan đến ${item.toLowerCase()}`
         }))
 
         await db.insert(categoriesTable).values(values)
     }
     catch (error) {
         console.log(error)
+        process.exit(1)
     }
 }
+
+main()
