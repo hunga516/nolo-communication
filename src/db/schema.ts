@@ -10,3 +10,11 @@ export const usersTable = pgTable("users", {
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp().defaultNow().notNull(),
 }, (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)]); //index for clerkId
+
+export const categoriesTable = pgTable("categories", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    name: varchar({ length: 255 }).notNull(),
+    description: varchar({ length: 255 }),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp().defaultNow().notNull(),
+}, (t) => [uniqueIndex("name_idx").on(t.name)]);
