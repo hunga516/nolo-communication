@@ -17,7 +17,12 @@ const Page = async ({searchParams} : PageProps) => {
   return (
     <>
       <HydrateClient>
-        <HomeView categoryId={categoryId} />
+        {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-4">*/}
+            {/*<div className="md:col-span-2">*/}
+                <HomeView categoryId={categoryId} />
+            {/*</div>*/}
+            {/*<div className="h-1.5 bg-red-400"></div>*/}
+        {/*</div>*/}
       </HydrateClient>
     </>
   );

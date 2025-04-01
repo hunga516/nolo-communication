@@ -9,11 +9,9 @@ interface HomeLayoutProps {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <HomeSidebar>
-      <div className="w-full">
-        <div>
+      <div>
           <HomeNavbar />
           {children}
-        </div>
       </div>
       <Command />
     </HomeSidebar>

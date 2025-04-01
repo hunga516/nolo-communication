@@ -6,7 +6,7 @@ interface HomeViewProps {
 
 export const HomeView = ({categoryId} : HomeViewProps) => {
     return (
-        <div className="max-w flex flex-col gap-y-6 bg-red-400 px-4 pt-2.5 mb-20">
+        <div className="flex flex-col gap-y-6 px-4 pt-2.5 mb-20">
             <CategoriesSection categoryId={categoryId} />
         </div>
     )

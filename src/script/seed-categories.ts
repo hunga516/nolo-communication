@@ -3,11 +3,19 @@ import {db} from "@/db";
 
 
 const categoryNames = [
-    "Tất cả",
-    "Phổ biến",
-    "Gần đây",
-    "Giải trí",
-    "Meme",
+    // "Tất cả",
+    // "Phổ biến",
+    // "Gần đây",
+    // "Giải trí",
+    // "Meme",
+    "Meme2",
+    "Meme3",
+    "Meme4",
+    "Meme5",
+    "Meme6",
+    "Meme7",
+    "Meme8",
+    "Meme9",
 ]
 
 async function main(){
