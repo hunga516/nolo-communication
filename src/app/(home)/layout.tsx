@@ -5,7 +5,9 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  return <HomeLayout>{children}</HomeLayout>;
+  return (
+        <HomeLayout>{children}</HomeLayout>
+  )
 };
 
 export default Layout;

@@ -31,10 +31,10 @@ export const FilterCarousel = ({
     const [api, setApi] = useState<CarouselApi>()
 
     return (
-        <div className="relative max-w-[65vw]">
+        <div className="relative -mx-4 px-4 md:max-w-[calc(100vw-var(--sidebar-width))] ">
             {/*Left fade*/}
             <div className={cn(
-                "absolute left-10 inset-y-0 w-12 z-10 bg-gradient-to-r from-white to-transparent",
+                "absolute left-12 inset-y-0 w-12 z-10 bg-gradient-to-r from-white to-transparent",
                 false && "hidden"
             )}>
 
@@ -47,7 +47,7 @@ export const FilterCarousel = ({
                 }}
                 className="px-10"
             >
-                <CarouselContent className="-ml-2">
+                <CarouselContent className="-ml-2 -mx-4">
                 <CarouselItem
                         className="pl-6 basis-auto"
                     >
@@ -77,7 +77,7 @@ export const FilterCarousel = ({
 
             {/*Right fade*/}
             <div className={cn(
-                "absolute right-10 inset-y-0 w-12 z-10 bg-gradient-to-l from-white to-transparent",
+                "absolute right-12 inset-y-0 w-16 z-10 bg-gradient-to-l from-white to-transparent",
                 false && "hidden"
             )}>
             </div>
