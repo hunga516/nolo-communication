@@ -1,5 +1,6 @@
 import {SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import {Clapperboard} from "lucide-react";
 
 const AuthButton = () => {
   return (
@@ -15,7 +16,11 @@ const AuthButton = () => {
          </div>
       </SignedOut>
       <SignedIn>
-        <UserButton />
+          <UserButton>
+              <UserButton.MenuItems>
+                  <UserButton.Link href="/studio" label="NOLO Studio" labelIcon={<Clapperboard className="size-4" />} />
+              </UserButton.MenuItems>
+          </UserButton>
       </SignedIn>
     </>
   );
