@@ -4,16 +4,16 @@ import {HomeView} from "@/modules/home/views/home-view";
 export const dynamic = "force-dynamic"; //khong cache
 
 interface PageProps {
-    searchParams: Promise<{
+    searchParams: Promise<{ //co san trong nextjs
         categoryId: string;
+        test: string;
     }>
 }
 
 const Page = async ({searchParams} : PageProps) => {
-    const {categoryId} = await searchParams;
-
+    const {categoryId, test} = await searchParams;
   void trpc.categories.getMany.prefetch() //lãng phí neu trong children khong === voi du lieu prefetch
-
+    console.log(test)
   return (
     <>
       <HydrateClient>

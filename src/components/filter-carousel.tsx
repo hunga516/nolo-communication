@@ -12,6 +12,7 @@ import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useSidebar} from "@/components/ui/sidebar";
 
 interface FilterCarouselProps {
     value?: string | null
@@ -24,14 +25,15 @@ interface FilterCarouselProps {
 }
 
 export const FilterCarousel = ({
-    value,
-    onSelect,
-    data,
-    isLoading,
+    value, //for item
+    onSelect, //for onClick item
+    data, //for render item list
+    isLoading, //for render skeleton
 }: FilterCarouselProps) => {
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
     const [count, setCount] = useState(0)
+    const {open} = useSidebar()
 
     useEffect(() => {
         if(!api) return;
@@ -45,8 +47,7 @@ export const FilterCarousel = ({
     }, [api])
 
     return (
-        <div className="relative -mx-4 px-4 md:max-w-[calc(100vw-var(--sidebar-width))] ">
-
+        <div className={`relative -mx-4 px-4 ${open ? "md:max-w-[calc(100vw-var(--sidebar-width))]" : "md:max-w-[calc(100vw-60px)]"}`}>
             {/*Left fade*/}
             <div className={cn(
                 "left-12 inset-y-0 w-12 z-10 bg-gradient-to-r from-white to-transparent",
@@ -83,7 +84,7 @@ export const FilterCarousel = ({
                                 className={`${i === 0 && "ml-4"} pl-2 basis-auto`}
                                 key={i}
                             >
-                                <Skeleton className="rounded-lg px-3 py-4 h-full w-[100px]"  />
+                                <Skeleton className="rounded-lg px-3 py-4 h-full w-[100px]"/>
                             </CarouselItem>
                         ))
                     }

@@ -32,6 +32,8 @@ const CategoriesSectionSuspense = ({categoryId}: CategorySectionProps) => {
     const onSelect = (value?: string | null) => {
         const url = new URL(window.location.href)
 
+        console.log(window.location.href)
+
         if (value) {
             url.searchParams.set("categoryId", value)
         }
