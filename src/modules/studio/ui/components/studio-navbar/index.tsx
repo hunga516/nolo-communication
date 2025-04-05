@@ -2,6 +2,7 @@
 
 import AuthButton from "@/modules/auth/ui/components/auth-button";
 import {SidebarTrigger} from "@/components/ui/sidebar";
+import StudioUploadModal from "@/modules/studio/ui/components/studio-upload-modal";
 
 const StudioNavbar = () => {
   return (
@@ -10,8 +11,11 @@ const StudioNavbar = () => {
          <SidebarTrigger />
      </div>
 
-      {/* /!*Auth button*!/*/}
-      <AuthButton />
+      <div className="flex gap-6">
+          <StudioUploadModal />
+
+          <AuthButton />
+      </div>
     </div>
   );
 };

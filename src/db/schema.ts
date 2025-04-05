@@ -1,4 +1,4 @@
-import {integer, pgTable, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
+import {integer,text, pgTable, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -14,7 +14,16 @@ export const usersTable = pgTable("users", {
 export const categoriesTable = pgTable("categories", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),
-    description: varchar({ length: 255 }),
+    description: text(),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp().defaultNow().notNull(),
 }, (t) => [uniqueIndex("name_idx").on(t.name)]);
+
+export const videosTable = pgTable("videos", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    title: varchar({ length: 255 }).notNull(),
+    description: text(),
+    // userId: uu
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp().defaultNow().notNull(),
+})
