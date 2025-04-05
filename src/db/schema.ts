@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm"
 import {integer,text, pgTable, timestamp, uniqueIndex, varchar} from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -23,7 +24,16 @@ export const videosTable = pgTable("videos", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
     description: text(),
-    // userId: uu
+    userId: integer("user_id").references(() => usersTable.id, {
+        onDelete: "cascade",
+    }).notNull(),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp().defaultNow().notNull(),
 })
+
+export const videoRelations = relations(videosTable, ({ one }) => ({
+    user: one(usersTable, {
+        fields: [videosTable.userId],
+        references: [usersTable.id],
+    })
+}))
