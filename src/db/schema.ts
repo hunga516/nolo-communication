@@ -23,17 +23,32 @@ export const categoriesTable = pgTable("categories", {
 export const videosTable = pgTable("videos", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
-    description: text(),
+    description: text("description"),
     userId: integer("user_id").references(() => usersTable.id, {
         onDelete: "cascade",
     }).notNull(),
+    categoryId: integer("category_id").references(() => categoriesTable.id, {
+        onDelete: "set null",
+    }),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp().defaultNow().notNull(),
 })
+
+export const userRelations = relations(usersTable, ({many}) => ({
+    videos: many(videosTable)
+}))
+
+export const categoryRelations = relations(categoriesTable, ({many}) => ({
+    videos: many(videosTable)
+}))
 
 export const videoRelations = relations(videosTable, ({ one }) => ({
     user: one(usersTable, {
         fields: [videosTable.userId],
         references: [usersTable.id],
+    }),
+    category: one(categoriesTable, {
+        fields: [videosTable.categoryId],
+        references: [categoriesTable.id],
     })
 }))
