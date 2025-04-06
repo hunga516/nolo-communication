@@ -28,7 +28,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import {useAuth, useClerk} from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 
 const navMain = [
   {
@@ -113,7 +113,7 @@ const navMain = [
 
 export function NavMain() {
   const pathname = usePathname();
-  const {isSignedIn} = useAuth();
+  const { isSignedIn } = useAuth();
   const clerk = useClerk();
 
   return (
@@ -136,10 +136,11 @@ export function NavMain() {
                     className={`${pathname === item.url ? "bg-gray-100" : ""}`}
                     tooltip={item.title}
                     onClick={(e) => {
-                      if (!isSignedIn && item.auth){
-                        e.preventDefault()
-                        return clerk.openSignIn()
-                    }}}
+                      if (!isSignedIn && item.auth) {
+                        e.preventDefault();
+                        return clerk.openSignIn();
+                      }
+                    }}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -153,10 +154,11 @@ export function NavMain() {
                     className={`${pathname === item.url ? "bg-gray-100" : ""}`}
                     tooltip={item.title}
                     onClick={(e) => {
-                      if (!isSignedIn && item.auth){
-                        e.preventDefault()
-                        return clerk.openSignIn()
-                      }}}
+                      if (!isSignedIn && item.auth) {
+                        e.preventDefault();
+                        return clerk.openSignIn();
+                      }
+                    }}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>

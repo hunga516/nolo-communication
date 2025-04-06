@@ -10,8 +10,8 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <HomeSidebar>
       <div>
-          <HomeNavbar />
-          {children}
+        <HomeNavbar />
+        {children}
       </div>
       <Command />
     </HomeSidebar>

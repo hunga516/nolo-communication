@@ -1,118 +1,122 @@
-"use client"
+"use client";
 
 import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-    type CarouselApi,
-} from "@/components/ui/carousel"
-import {Badge} from "@/components/ui/badge";
-import {cn} from "@/lib/utils";
-import {useEffect, useState} from "react";
-import {Skeleton} from "@/components/ui/skeleton";
-import {useSidebar} from "@/components/ui/sidebar";
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useSidebar } from "@/components/ui/sidebar";
 
 interface FilterCarouselProps {
-    value?: string | null
-    isLoading?: boolean
-    onSelect?: (value?:string | null) => void
-    data: {
-        value: string
-        label: string
-    }[]
+  value?: string | null;
+  isLoading?: boolean;
+  onSelect?: (value?: string | null) => void;
+  data: {
+    value: string;
+    label: string;
+  }[];
 }
 
 export const FilterCarousel = ({
-    value, //for item
-    onSelect, //for onClick item
-    data, //for render item list
-    isLoading, //for render skeleton
+  value, //for item
+  onSelect, //for onClick item
+  data, //for render item list
+  isLoading, //for render skeleton
 }: FilterCarouselProps) => {
-    const [api, setApi] = useState<CarouselApi>()
-    const [current, setCurrent] = useState(0)
-    const [count, setCount] = useState(0)
-    const {open} = useSidebar()
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+  const { open } = useSidebar();
 
-    useEffect(() => {
-        if(!api) return;
+  useEffect(() => {
+    if (!api) return;
 
-        setCount(api.scrollSnapList().length)
-        setCurrent(api.selectedScrollSnap() + 1)
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
 
-        api.on("select", () => {
-            setCurrent(api.selectedScrollSnap() + 1)
-        })
-    }, [api])
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
-    return (
-        <div className={`relative -mx-4 px-4 ${open ? "md:max-w-[calc(100vw-var(--sidebar-width))]" : "md:max-w-[calc(100vw-60px)]"}`}>
-            {/*Left fade*/}
-            <div className={cn(
-                "left-12 inset-y-0 w-12 z-10 bg-gradient-to-r from-white to-transparent",
-                current === 1 && "hidden",
-                current === 0 ? "hidden" : "absolute",
-            )}>
+  return (
+    <div
+      className={`relative -mx-4 px-4 ${open ? "md:max-w-[calc(100vw-var(--sidebar-width))]" : "md:max-w-[calc(100vw-60px)]"}`}
+    >
+      {/*Left fade*/}
+      <div
+        className={cn(
+          "left-12 inset-y-0 w-12 z-10 bg-gradient-to-r from-white to-transparent",
+          current === 1 && "hidden",
+          current === 0 ? "hidden" : "absolute",
+        )}
+      ></div>
 
-            </div>
-
-            <Carousel
-                opts={{
-                    align: "start",
-                    dragFree: true,
-                }}
-                setApi={setApi}
-                className="px-10"
+      <Carousel
+        opts={{
+          align: "start",
+          dragFree: true,
+        }}
+        setApi={setApi}
+        className="px-10"
+      >
+        <CarouselContent className="-ml-2 -mx-4">
+          {!isLoading && (
+            <CarouselItem
+              onClick={() => onSelect?.(null)}
+              className="pl-6 basis-auto"
             >
-                <CarouselContent className="-ml-2 -mx-4">
-                    {!isLoading && (
-                        <CarouselItem
-                            onClick={() => onSelect?.(null)}
-                            className="pl-6 basis-auto"
-                        >
-                            <Badge
-                                variant={!value ? "default" : "secondary"}
-                                className="px-3 py-1 text-sm rounded-sm  select-none">
-                                Tất cả
-                            </Badge>
-                        </CarouselItem>
-                    )}
-                    {isLoading &&
-                        Array.from({length: 12}).map((item, i) => (
-                            <CarouselItem
-                                className={`${i === 0 && "ml-4"} pl-2 basis-auto`}
-                                key={i}
-                            >
-                                <Skeleton className="rounded-lg px-3 py-4 h-full w-[100px]"/>
-                            </CarouselItem>
-                        ))
-                    }
-                    {!isLoading && data.map(item => (
-                        <CarouselItem
-                            className="pl-2 basis-auto"
-                            key={item.value}
-                            onClick={() => onSelect?.(item.value)}
-                        >
-                            <Badge
-                                variant={value === item.value ? "default" : "secondary"}
-                                className="px-3 py-1 text-sm rounded-sm cursor-pointer select-none"
-                            >
-                                {item.label}
-                            </Badge>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-0 z-20"/>
-                <CarouselNext className="right-0 z-20"/>
-            </Carousel>
+              <Badge
+                variant={!value ? "default" : "secondary"}
+                className="px-3 py-1 text-sm rounded-sm  select-none"
+              >
+                Tất cả
+              </Badge>
+            </CarouselItem>
+          )}
+          {isLoading &&
+            Array.from({ length: 12 }).map((item, i) => (
+              <CarouselItem
+                className={`${i === 0 && "ml-4"} pl-2 basis-auto`}
+                key={i}
+              >
+                <Skeleton className="rounded-lg px-3 py-4 h-full w-[100px]" />
+              </CarouselItem>
+            ))}
+          {!isLoading &&
+            data.map((item) => (
+              <CarouselItem
+                className="pl-2 basis-auto"
+                key={item.value}
+                onClick={() => onSelect?.(item.value)}
+              >
+                <Badge
+                  variant={value === item.value ? "default" : "secondary"}
+                  className="px-3 py-1 text-sm rounded-sm cursor-pointer select-none"
+                >
+                  {item.label}
+                </Badge>
+              </CarouselItem>
+            ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-0 z-20" />
+        <CarouselNext className="right-0 z-20" />
+      </Carousel>
 
-            {/*Right fade*/}
-            <div className={cn(
-                "absolute right-12 inset-y-0 w-16 z-10 bg-gradient-to-l from-white to-transparent",
-                current === count && "hidden"
-            )}>
-            </div>
-        </div>
-    )
-}
+      {/*Right fade*/}
+      <div
+        className={cn(
+          "absolute right-12 inset-y-0 w-16 z-10 bg-gradient-to-l from-white to-transparent",
+          current === count && "hidden",
+        )}
+      ></div>
+    </div>
+  );
+};

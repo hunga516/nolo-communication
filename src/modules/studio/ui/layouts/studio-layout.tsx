@@ -1,5 +1,5 @@
 import Command from "@/modules/home/logic/command";
-import {StudioSidebar} from "@/modules/studio/ui/components/studio-sidebar";
+import { StudioSidebar } from "@/modules/studio/ui/components/studio-sidebar";
 import StudioNavbar from "@/modules/studio/ui/components/studio-navbar";
 
 interface StudioLayoutProps {
@@ -10,8 +10,8 @@ const StudioLayout = ({ children }: StudioLayoutProps) => {
   return (
     <StudioSidebar>
       <div>
-          <StudioNavbar />
-          {children}
+        <StudioNavbar />
+        {children}
       </div>
       <Command />
     </StudioSidebar>
