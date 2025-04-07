@@ -1,3 +1,5 @@
+"use client"
+
 import { trpc } from "@/trpc/client";
 import { DEFAULT_LIMIT } from "@/constans";
 
@@ -11,7 +13,9 @@ const VideosSection = () => {
     },
   );
 
-  return <div>videos section</div>;
+  return (
+      <div>{JSON.stringify(data)}</div>
+  );
 };
 
 export default VideosSection;
