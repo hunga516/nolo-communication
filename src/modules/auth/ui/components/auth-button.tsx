@@ -21,7 +21,7 @@ const AuthButton = () => {
             <UserButton.Link
               href="/studio"
               label="NOLO Studio"
-              labelIcon={<Clapperboard className="size-4" />}
+              labelIcon={<Clapperboard className="size-3" />}
             />
           </UserButton.MenuItems>
         </UserButton>

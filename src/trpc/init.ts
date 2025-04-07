@@ -10,7 +10,7 @@ import { ratelimit } from "@/lib/ratelimit";
 export const createTRPCContext = cache(async () => {
   const { userId } = await auth();
 
-  return { clerkUserId: userId };
+    return { clerkUserId: userId };
 });
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
