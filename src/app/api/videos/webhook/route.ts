@@ -52,6 +52,32 @@ export const POST = async (request: Request) => {
                 .where(eq(videosTable.muxUploadId, data.upload_id))
             break;
         }
+        case "video.asset.ready": {
+            const data = payload.data as VideoAssetReadyWebhookEvent["data"]
+
+            if (!data.upload_id) {
+                return new Response('Missing upload_id', { status: 400 });
+            }
+
+            if (!data.playback_ids?.[0].id) {
+                return new Response('Missing playback_id', { status: 400 });
+            }
+
+            const thumbnailUrl = `https://image.mux.com/${data.playback_ids?.[0].id}/thumbnail.jpg`
+            const previewUrl = `https://image.mux.com/${data.playback_ids?.[0].id}/animated.gif`
+
+            await db
+                .update(videosTable)
+                .set({
+                    muxStatus: data.status,
+                    muxUploadId: data.playback_ids?.[0].id,
+                    muxAssetId: data.id,
+                    previewUrl: previewUrl,
+                    thumbnailUrl: thumbnailUrl,
+                })
+                .where(eq(videosTable.muxUploadId, data.upload_id))
+            break;
+        }
     }
     return new Response("Webhook recived", { status: 200 });
 }
