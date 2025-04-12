@@ -7,14 +7,12 @@ interface PageProps {
   searchParams: Promise<{
     //co san trong nextjs
     categoryId: string;
-    test: string;
   }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {
-  const { categoryId, test } = await searchParams;
+  const { categoryId } = await searchParams;
   void trpc.categories.getMany.prefetch(); //lãng phí neu trong children khong === voi du lieu prefetch
-  console.log(test);
   return (
     <>
       <HydrateClient>

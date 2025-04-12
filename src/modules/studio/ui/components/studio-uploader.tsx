@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import MuxUploader, { MuxUploaderDrop, MuxUploaderFileSelect, MuxUploaderProgress, MuxUploaderStatus } from "@mux/mux-uploader-react";
-import { UploadIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface StudioUploaderProps {
     endpoint?: string | null;

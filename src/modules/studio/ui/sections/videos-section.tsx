@@ -6,7 +6,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { VideoThumbnail } from "@/modules/video/ui/components/video-thumbnail";
 
@@ -22,7 +21,6 @@ const VideosSection = () => {
 }
 
 const VideosSectionSuspense = () => {
-    const router = useRouter();
     const [videos, query] = trpc.studio.getMany.useSuspenseInfiniteQuery(
         {
             limit: DEFAULT_LIMIT,
