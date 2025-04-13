@@ -1,16 +1,16 @@
 import { db } from "@/db";
 import { videosTable } from "@/db/schema";
 import { mux } from "@/lib/mux";
-import { VideoAssetCreatedWebhookEvent, VideoAssetErroredWebhookEvent, VideoAssetReadyWebhookEvent, VideoAssetTrackReadyWebhookEvent } from "@mux/mux-node/resources/webhooks.mjs";
+import { VideoAssetCreatedWebhookEvent, VideoAssetDeletedWebhookEvent, VideoAssetErroredWebhookEvent, VideoAssetReadyWebhookEvent, VideoAssetTrackReadyWebhookEvent } from "@mux/mux-node/resources/webhooks.mjs";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-
 
 type WebhookEvent =
     | VideoAssetCreatedWebhookEvent
     | VideoAssetReadyWebhookEvent
     | VideoAssetErroredWebhookEvent
     | VideoAssetTrackReadyWebhookEvent
+    | VideoAssetDeletedWebhookEvent
 
 export const POST = async (request: Request) => {
     if (!process.env.MUX_WEBHOOK_SECRET) {
@@ -52,8 +52,8 @@ export const POST = async (request: Request) => {
                 .where(eq(videosTable.muxUploadId, data.upload_id))
             break;
         }
+            
         case "video.asset.ready": {
-            console.log("video.asset.ready", payload)
             const data = payload.data as VideoAssetReadyWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -78,6 +78,36 @@ export const POST = async (request: Request) => {
                     duration: duration,
                 })
                 .where(eq(videosTable.muxUploadId, data.upload_id))
+            break;
+        }
+            
+        case "video.asset.errored": {
+            const data = payload.data as VideoAssetErroredWebhookEvent["data"]  
+
+            if (!data.upload_id) {
+                return new Response('Missing upload_id', { status: 400 });
+            }
+
+            await db
+                .update(videosTable)
+                .set({
+                    muxStatus: data.status,
+                })
+                .where(eq(videosTable.muxUploadId, data.upload_id))
+            break;
+        }
+            
+        case "video.asset.deleted": {
+            const data = payload.data as VideoAssetDeletedWebhookEvent["data"]
+
+            if (!data.upload_id) {
+                return new Response('Missing upload_id', { status: 400 });
+            }
+
+            await db
+                .delete(videosTable)
+                .where(eq(videosTable.muxUploadId, data.upload_id))
+                
             break;
         }
     }

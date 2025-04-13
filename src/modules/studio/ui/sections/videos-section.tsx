@@ -8,7 +8,8 @@ import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Link from "next/link";
 import { VideoThumbnail } from "@/modules/video/ui/components/video-thumbnail";
-
+import { translateStatus } from "@/lib/utils";
+import moment from "@/lib/moment";
 
 const VideosSection = () => {
     return (
@@ -49,23 +50,30 @@ const VideosSectionSuspense = () => {
                         {videos.pages.flatMap((page) => page.items).map((video) => (
                             <Link key={video.id} href={`/videos/${video.id}`} legacyBehavior>
                                 <TableRow>
-                                    <TableCell>
+                                    <TableCell className="flex items-center gap-2">
                                         <div className="relative aspect-video w-36 shrink-0">
                                             <VideoThumbnail
                                                 imageUrl={video.thumbnailUrl}
                                                 title={video.title}
                                                 previewUrl={video.previewUrl}
+                                                duration={video.duration}
                                             />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <p className="line-clamp-1">{video.title}</p>
+                                            <p className="text-xs text-muted-foreground line-clamp-1">{video.description || "Không có mô tả"}</p>
                                         </div>
                                     </TableCell>
                                     <TableCell>
                                         visibility
                                     </TableCell>
                                     <TableCell>
-                                        Status
+                                        <div className="flex items-center">
+                                            {translateStatus(video.muxStatus || "Đang chờ")}
+                                        </div>
                                     </TableCell>
                                     <TableCell>
-                                        Date
+                                        {moment(video.createdAt).startOf("hour").fromNow()}
                                     </TableCell>
                                     <TableCell>
                                         Views

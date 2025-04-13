@@ -11,3 +11,23 @@ export const formatDuration = (duration: number) => {
 
   return `${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
 }
+
+export const snakeCastToTitle = (str: string) => {
+  return str.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export const translateStatus = (status: string) => {
+  switch (status) {
+    case "processing":
+      return "Đang xử lý";
+    case "ready":
+      return "Sẵn sàng";
+    case "error":
+      return "Lỗi";
+    case "waiting":
+      return "Đang chờ";
+    default:
+      return status;
+  }
+  return status;
+}
