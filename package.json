@@ -8,6 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:all": "concurrently  \"npm run dev:webhook\" \"npm start\"",
     "lint": "next lint"
   },
   "dependencies": {
