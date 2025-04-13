@@ -53,6 +53,7 @@ export const POST = async (request: Request) => {
             break;
         }
         case "video.asset.ready": {
+            console.log("video.asset.ready", payload)
             const data = payload.data as VideoAssetReadyWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -65,7 +66,7 @@ export const POST = async (request: Request) => {
 
             const thumbnailUrl = `https://image.mux.com/${data.playback_ids?.[0].id}/thumbnail.jpg`
             const previewUrl = `https://image.mux.com/${data.playback_ids?.[0].id}/animated.gif`
-
+            const duration = data.duration ? Math.round(data.duration) : 0
             await db
                 .update(videosTable)
                 .set({
@@ -74,6 +75,7 @@ export const POST = async (request: Request) => {
                     muxAssetId: data.id,
                     previewUrl: previewUrl,
                     thumbnailUrl: thumbnailUrl,
+                    duration: duration,
                 })
                 .where(eq(videosTable.muxUploadId, data.upload_id))
             break;

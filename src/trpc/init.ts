@@ -1,16 +1,16 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { cache } from "react";
 import superjson from "superjson";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { ratelimit } from "@/lib/ratelimit";
+import { cache } from "react";
 
 export const createTRPCContext = cache(async () => {
   const { userId } = await auth();
 
-    return { clerkUserId: userId };
+  return { clerkUserId: userId };
 });
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
@@ -33,7 +33,7 @@ export const protectedProcedure = t.procedure.use(
     const { ctx } = opts;
 
     if (!ctx.clerkUserId) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError({ code: "BAD_GATEWAY" });
     }
 
     const data = await db
