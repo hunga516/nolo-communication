@@ -4,8 +4,27 @@ import {videosTable, videoUpdateSchema} from "@/db/schema";
 import {mux} from "@/lib/mux";
 import { and, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const videoRouter = createTRPCRouter({
+    delete: protectedProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .mutation(async ({ input, ctx }) => { 
+            const { id: userId } = ctx.user
+            const [removedVideo] = await db
+                .delete(videosTable)
+                .where(and(
+                    eq(videosTable.id, input.id),
+                    eq(videosTable.userId, userId)
+                ))
+                .returning()
+            
+            if (!removedVideo) {
+                throw new TRPCError({ code: 'NOT_FOUND', message: 'Video not found for you dont have permisson to delete it' });
+            }   
+
+            return removedVideo
+        }),
     update: protectedProcedure
         .input(videoUpdateSchema)
         .mutation(async ({ input, ctx }) => { 
@@ -33,6 +52,8 @@ export const videoRouter = createTRPCRouter({
             if (!updatedVideo) {
                 throw new TRPCError({ code: 'NOT_FOUND', message: 'Video not found for you dont have permisson to update it' });
             }
+
+            return updatedVideo
         }),
     create: protectedProcedure.mutation(async ({
         ctx

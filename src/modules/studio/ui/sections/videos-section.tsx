@@ -10,7 +10,7 @@ import Link from "next/link";
 import { VideoThumbnail } from "@/modules/video/ui/components/video-thumbnail";
 import { translateStatus, translateVisibility } from "@/lib/utils";
 import moment from "@/lib/moment";
-import { Globe, Lock } from "lucide-react";
+import { Globe2Icon, Lock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const VideosSection = () => {
@@ -124,7 +124,7 @@ const VideosSectionSuspense = () => {
                                             {video.visibility === "private" ? (
                                                 <Lock className="size-4" />
                                             ) : (
-                                                <Globe className="size-4" />
+                                                <Globe2Icon className="size-4" />
                                             )}
                                             {translateVisibility(video.visibility)}
                                         </div>

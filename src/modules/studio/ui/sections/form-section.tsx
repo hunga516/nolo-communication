@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { videoUpdateSchema } from "@/db/schema";
 import { trpc } from "@/trpc/client";
-import { MoreVerticalIcon, TrashIcon } from "lucide-react";
-import { Suspense } from "react";
+import { CopyCheckIcon, CopyIcon, Globe2Icon, Lock, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,6 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import VideoPlayer from "@/modules/video/ui/components/video-player";
+import Link from "next/link";
+import { set } from "date-fns";
+import { translateStatus } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 
 interface FormSectionProps {
@@ -39,6 +44,7 @@ const FormSectionSkeleton = () => {
 }
 
 export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
+    const router = useRouter();
     const utils = trpc.useUtils();
     const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
     const [categories] = trpc.categories.getMany.useSuspenseQuery();
@@ -55,6 +61,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         }
     })
 
+    const dilit = trpc.videos.delete.useMutation({
+        onSuccess: () => {
+            utils.studio.getMany.invalidate();
+            toast.success("Video đã được xóa")
+            router.push("/studio")
+        },
+        onError: () => {
+            toast.error("Bạn không co quyền xóa video này")
+        }
+    })
+
     const form = useForm<z.infer<typeof videoUpdateSchema>>({
         resolver: zodResolver(videoUpdateSchema),
         defaultValues: video,
@@ -62,6 +79,18 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
     const onSubmit = async (data: z.infer<typeof videoUpdateSchema>) => {
         update.mutate(data)
+    }
+
+    const fullUrl = `${process.env.VPS_URL || "http://localhost:3000"}/videos/${video.id}`
+    const [isCopied, setIsCopied] = useState(false);
+
+    const onCopy = async () => {
+        await navigator.clipboard.writeText(fullUrl)
+        setIsCopied(true)
+
+        setTimeout(() => {
+            setIsCopied(false)
+        }, 3000)
     }
 
     return (
@@ -83,9 +112,9 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => dilit.mutate({ id: videoId })}>
                                     <TrashIcon className="size-4" />
-                                    Delete
+                                    Xoá video
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -172,6 +201,100 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                             )}
                         >
                         </FormField>
+                    </div>
+                    <div className="flex flex-col gap-y-8 lg:col-span-2">
+                        <div className="flex flex-col gap-4 bg-gray-200 overflow-hidden h-fit rounded-lg">
+                            <div className="aspect-video overflow-hidden relative">
+                                <VideoPlayer
+                                    playbackId={video.muxPlaybackId}
+                                    thumbnailUrl={video.thumbnailUrl}
+                                />
+                            </div>
+                            <div className="p-4 flex flex-col gap-y-6">
+                                <div className="flex justify-between items-center gap-x-2">
+                                    <div className="flex flex-col gap-y-1">
+                                        <p className="text-xs text-muted-foreground">
+                                            Video link
+                                        </p>
+                                        <div className="flex items-center gap-x-2">
+                                            <Link href={`/videos/${video.id}`}>
+                                                <p className="line-clamp-1 text-sm text-blue-500">
+                                                    {fullUrl}
+                                                </p>
+                                            </Link>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                disabled={isCopied}
+                                                onClick={onCopy}
+                                            >
+                                                {isCopied ? <CopyCheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                    <div className="flex flex-col gap-y-1">
+                                        <p className="text-muted-foreground text-xs">
+                                            Trạng thái video
+                                        </p>
+                                        <p className="text-sm">
+                                            {translateStatus(video.muxStatus || "Đang xử lý")}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                    <div className="flex flex-col gap-y-1">
+                                        <p className="text-muted-foreground text-xs">
+                                            Trạng thái phụ đề
+                                        </p>
+                                        <p className="text-sm">
+                                            {translateStatus(video.muxTrackStatus || "Đang xử lý")}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <FormField
+                            control={form.control}
+                            name="visibility"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Chế độ hiển thị
+                                        {/* add AI button */}
+                                    </FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value || ""}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-1/2">
+                                                <SelectValue placeholder="Chọn chế độ hiển thị" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="public">
+                                                <Globe2Icon className="size-4" />
+                                                Công khai
+                                            </SelectItem>
+                                            <SelectItem value="private">
+                                                <Lock className="size-4" />
+                                                Riêng tư
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        >
+                        </FormField>
+
                     </div>
                 </div>
             </form>

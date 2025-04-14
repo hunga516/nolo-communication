@@ -56,7 +56,7 @@ export const POST = async (request: Request) => {
         }
             
         case "video.asset.ready": {
-            log("video.asset.ready", payload)
+            log("video.asset.ready", payload.data.playback_ids)
             const data = payload.data as VideoAssetReadyWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -76,6 +76,7 @@ export const POST = async (request: Request) => {
                     muxStatus: data.status,
                     muxUploadId: data.playback_ids?.[0].id,
                     muxAssetId: data.id,
+                    muxPlaybackId: data.playback_ids?.[0].id,
                     previewUrl: previewUrl,
                     thumbnailUrl: thumbnailUrl,
                     duration: duration,

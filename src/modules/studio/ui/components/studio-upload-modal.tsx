@@ -1,11 +1,15 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Loader2Icon, Upload } from "lucide-react";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { StudioUploader } from "@/modules/studio/ui/components/studio-uploader";
+import { useRouter } from "next/navigation";
 
 const StudioUploadModal = () => {
+    const router = useRouter()
     const utils = trpc.useUtils()
     const create = trpc.videos.create.useMutation({
         onSuccess: () => {
@@ -16,6 +20,13 @@ const StudioUploadModal = () => {
             toast.error(err.message)
         }
     });
+
+    const onSuccess = () => {
+        if (!create.data?.video.id) return
+
+        create.reset()
+        router.push(`/studio/videos/${create.data.video.id}`)
+    }
 
     return (
         <>
@@ -32,7 +43,7 @@ const StudioUploadModal = () => {
                 title={"Tải lên video mới"}
                 onOpenChange={() => create.reset()}
             >
-                <StudioUploader endpoint={create.data?.url} />
+                <StudioUploader onSuccess={onSuccess} endpoint={create.data?.url} />
             </ResponsiveDialog>
         </>
     );

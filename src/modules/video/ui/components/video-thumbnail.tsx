@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { formatDuration } from "@/lib/utils"
 import Image from "next/image"
 
@@ -14,32 +17,33 @@ export const VideoThumbnail = ({
     duration,
     title
 }: VideoThumbnailProps) => {
+    const [mainSrc, setMainSrc] = useState(imageUrl ?? "/img/error-thumbnail.png");
+    const [previewSrc, setPreviewSrc] = useState(previewUrl ?? "/img/error-thumbnail.png");
+
     return (
         <div className="relative group">
-            {/* For wrapper */}
             <div className="relative w-full overflow-hidden rounded-lg aspect-video">
                 <Image
-                    src={imageUrl || "/img/error-thumbnail.png"}
+                    src={mainSrc}
                     alt={title}
                     fill
-                    unoptimized={!!imageUrl}
-                    className="size-full group-hover:opacity-0" />
+                    unoptimized
+                    className="size-full group-hover:opacity-0"
+                    onError={() => setMainSrc("/img/only-audio-thumbnail.png")}
+                />
                 <Image
-                    src={previewUrl || "/img/error-thumbnail.png"}
+                    src={previewSrc}
                     alt={title}
                     fill
-                    unoptimized={!!previewUrl}
-                    className="size-full opacity-0 group-hover:opacity-100" />
+                    unoptimized
+                    className="size-full opacity-0 group-hover:opacity-100"
+                    onError={() => setPreviewSrc("/img/only-audio-thumbnail.png")}
+                />
 
-                {/* Duration video */}
                 <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
                     {duration ? formatDuration(duration) : "0:00"}
                 </div>
             </div>
-
-            {/* Video detail wrapper */}
-            <div></div>
         </div>
     )
-
 }
