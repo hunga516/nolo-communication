@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { videosTable } from "@/db/schema";
 import { mux } from "@/lib/mux";
 import { VideoAssetCreatedWebhookEvent, VideoAssetDeletedWebhookEvent, VideoAssetErroredWebhookEvent, VideoAssetReadyWebhookEvent, VideoAssetTrackReadyWebhookEvent } from "@mux/mux-node/resources/webhooks.mjs";
+import { log } from "console";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
@@ -37,6 +38,7 @@ export const POST = async (request: Request) => {
 
     switch (payload.type as WebhookEvent["type"]) {
         case "video.asset.created": {
+            log("video.asset.created", payload)
             const data = payload.data as VideoAssetCreatedWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -54,6 +56,7 @@ export const POST = async (request: Request) => {
         }
             
         case "video.asset.ready": {
+            log("video.asset.ready", payload)
             const data = payload.data as VideoAssetReadyWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -98,6 +101,7 @@ export const POST = async (request: Request) => {
         }
             
         case "video.asset.deleted": {
+            log("video.asset.deleted", payload)
             const data = payload.data as VideoAssetDeletedWebhookEvent["data"]
 
             if (!data.upload_id) {
@@ -107,8 +111,33 @@ export const POST = async (request: Request) => {
             await db
                 .delete(videosTable)
                 .where(eq(videosTable.muxUploadId, data.upload_id))
-                
             break;
+        }
+            
+        case "video.asset.track.ready": {
+            log("video.asset.track.ready", payload)
+            const data = payload.data as VideoAssetTrackReadyWebhookEvent["data"] & {
+                asset_id: string
+            }
+
+            // igonre webhook say asset_id not exist
+            const assetId = data.asset_id
+            const trackId = data.id
+            const status = data.status
+
+            if (!assetId) {
+                return new Response('Missing assetid', { status: 400 });
+            }
+
+            await db
+                .update(videosTable)
+                .set({
+                    muxTrackId: trackId,
+                    muxTrackStatus: status,
+                })
+                .where(eq(videosTable.muxAssetId, assetId))
+            break;
+            
         }
     }
     return new Response("Webhook recived", { status: 200 });

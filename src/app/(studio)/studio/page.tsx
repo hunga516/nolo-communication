@@ -1,5 +1,5 @@
 import { trpc } from "@/trpc/server";
-import StudioView from "@/modules/studio/view/studio-view";
+import StudioView from "@/modules/studio/views/studio-view";
 import { DEFAULT_LIMIT } from "@/constans";
 
 export const dynamic = "force-dynamic"; //khong cache

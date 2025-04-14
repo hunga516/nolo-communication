@@ -7,7 +7,7 @@ import { StudioUploader } from "@/modules/studio/ui/components/studio-uploader";
 
 const StudioUploadModal = () => {
     const utils = trpc.useUtils()
-    const create = trpc.video.create.useMutation({
+    const create = trpc.videos.create.useMutation({
         onSuccess: () => {
             toast.success("Video mới đã được thêm")
             utils.studio.getMany.invalidate()

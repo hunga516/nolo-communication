@@ -7,6 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   "/cua-hang(.*)",
   "/nhiem-vu(.*)",
   "/studio(.*)",
+  "/studio/video",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

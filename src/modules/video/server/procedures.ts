@@ -1,9 +1,39 @@
 import {createTRPCRouter, protectedProcedure} from "@/trpc/init";
 import {db} from "@/db";
-import {videosTable} from "@/db/schema";
+import {videosTable, videoUpdateSchema} from "@/db/schema";
 import {mux} from "@/lib/mux";
+import { and, eq } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const videoRouter = createTRPCRouter({
+    update: protectedProcedure
+        .input(videoUpdateSchema)
+        .mutation(async ({ input, ctx }) => { 
+            const { id: userId } = ctx.user
+
+            if (!input.id) {
+                throw new TRPCError({ code: 'BAD_REQUEST', message: 'Video id is required' });
+            }
+            
+            const [updatedVideo] = await db
+                .update(videosTable)
+                .set({
+                    title: input.title,
+                    description: input.description,
+                    categoryId: input.categoryId,
+                    visibility: input.visibility,
+                    updatedAt: new Date(),
+                })
+                .where(and(
+                    eq(videosTable.id, input.id),
+                    eq(videosTable.userId, userId)
+                ))
+                .returning()
+            
+            if (!updatedVideo) {
+                throw new TRPCError({ code: 'NOT_FOUND', message: 'Video not found for you dont have permisson to update it' });
+            }
+        }),
     create: protectedProcedure.mutation(async ({
         ctx
     }) => {
@@ -14,6 +44,16 @@ export const videoRouter = createTRPCRouter({
             new_asset_settings: {
                 passthrough: JSON.stringify(userId),
                 playback_policy: ['public'],
+                input: [
+                    {
+                        generated_subtitles: [
+                            {
+                                language_code: 'en',
+                                name: 'English',
+                            }
+                        ]
+                    }
+                ]
             },
         })
 

@@ -7,12 +7,15 @@ import {
   uniqueIndex,
   varchar,
   pgEnum,
+  uuid,
 } from "drizzle-orm/pg-core";
+
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 
 export const usersTable = pgTable(
   "users",
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: uuid("id").primaryKey().defaultRandom(),
     clerkId: varchar({ length: 255 }).unique().notNull(),
     name: varchar({ length: 255 }).notNull(),
     age: integer().notNull(),
@@ -27,7 +30,7 @@ export const usersTable = pgTable(
 export const categoriesTable = pgTable(
   "categories",
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: varchar({ length: 255 }).notNull(),
     description: text(),
     createdAt: timestamp().defaultNow().notNull(),
@@ -43,7 +46,7 @@ export const videoVisibility = pgEnum("video_visibility", [
 ]);
 
 export const videosTable = pgTable("videos", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: uuid("id").primaryKey().defaultRandom(),  
   title: varchar({ length: 255 }).notNull(),
   description: text("description"),
   muxStatus: text("mux_status"),
@@ -55,17 +58,21 @@ export const videosTable = pgTable("videos", {
   previewUrl: text("preview_url"),
   duration: integer("duration"),
   visibility: videoVisibility("visibility").default("private").notNull(),
-  userId: integer("user_id")
+  userId: uuid("user_id")
     .references(() => usersTable.id, {
       onDelete: "cascade",
     })
     .notNull(),
-  categoryId: integer("category_id").references(() => categoriesTable.id, {
+  categoryId: uuid("category_id").references(() => categoriesTable.id, {
     onDelete: "set null",
   }),
   createdAt: timestamp().defaultNow().notNull(),
   updatedAt: timestamp().defaultNow().notNull(),
 });
+
+export const videoInsertSchema = createInsertSchema(videosTable)
+export const videoUpdateSchema = createUpdateSchema(videosTable)
+export const videoSelectSchema = createSelectSchema(videosTable)
 
 export const userRelations = relations(usersTable, ({ many }) => ({
   videos: many(videosTable),

@@ -29,5 +29,15 @@ export const translateStatus = (status: string) => {
     default:
       return status;
   }
-  return status;
+}
+
+export const translateVisibility = (visibility: string) => {
+  switch (visibility) {
+    case "public":
+      return "Công khai";
+    case "private":
+      return "Riêng tư";
+    default:
+      return visibility;
+  }
 }

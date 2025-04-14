@@ -19,13 +19,13 @@ export const VideoThumbnail = ({
             {/* For wrapper */}
             <div className="relative w-full overflow-hidden rounded-lg aspect-video">
                 <Image
-                    src={imageUrl ?? "/img/error-thumbnail.png"}
+                    src={imageUrl || "/img/error-thumbnail.png"}
                     alt={title}
                     fill
                     unoptimized={!!imageUrl}
                     className="size-full group-hover:opacity-0" />
                 <Image
-                    src={previewUrl ?? "/img/error-thumbnail.png"}
+                    src={previewUrl || "/img/error-thumbnail.png"}
                     alt={title}
                     fill
                     unoptimized={!!previewUrl}

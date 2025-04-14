@@ -2,11 +2,11 @@ import { categoriesTable } from "@/db/schema";
 import { db } from "@/db";
 
 const categoryNames = [
-  // "Tất cả",
-  // "Phổ biến",
-  // "Gần đây",
-  // "Giải trí",
-  // "Meme",
+  "Tất cả",
+  "Phổ biến",
+  "Gần đây",
+  "Giải trí",
+  "Meme",
   "Meme2",
   "Meme3",
   "Meme4",
