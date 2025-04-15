@@ -47,7 +47,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="mt-2">
         <SidebarGroup>
-          <StudioSidebarUser />
+          <StudioSidebarUser place="bottom" size={12} />
           {open && (
             <SidebarGroupLabel>Quản lý nội dung của bạn</SidebarGroupLabel>
           )}
