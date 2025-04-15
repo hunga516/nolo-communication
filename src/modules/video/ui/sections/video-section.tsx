@@ -5,8 +5,8 @@ import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import VideoPlayer from "../components/video-player";
-import { VideoBanner } from "./video-banner";
-import { VideoHeader } from "./video-header";
+import { VideoBanner } from "../components/video-banner";
+import { VideoHeader } from "../components/video-header";
 
 interface VideoSectionProps {
     videoId: string;

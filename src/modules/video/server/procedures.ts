@@ -2,11 +2,60 @@ import { createTRPCRouter, protectedProcedure, baseProcedure } from "@/trpc/init
 import { db } from "@/db";
 import { usersTable, videosTable, videoUpdateSchema } from "@/db/schema";
 import { mux } from "@/lib/mux";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const videoRouter = createTRPCRouter({
+    getMany: baseProcedure
+        .input(z.object({
+            categoryId: z.string().uuid().nullish(),
+            cursor: z.object({
+                id: z.string().uuid(),
+                createdAt: z.date(),
+            })
+                .nullish(),
+            limit: z.number().min(1).max(100),
+        }))
+        .query(async ({ input }) => { 
+            const { cursor, limit, categoryId } = input
+            
+            const data = await db
+                .select({
+                    ...getTableColumns(videosTable),
+                    user: {
+                        ...getTableColumns(usersTable),
+                    }
+                })
+                .from(videosTable)
+                .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))
+                .where(and(
+                    eq(videosTable.visibility, "public"),
+                    categoryId ? eq(videosTable.categoryId, categoryId) : undefined,
+                    cursor
+                        ? or(
+                            lt(videosTable.createdAt, cursor.createdAt),    
+                            and(
+                                eq(videosTable.createdAt, cursor.createdAt),
+                                lt(videosTable.id, cursor.id)
+                            )
+                    ) : undefined
+                )).orderBy(desc(videosTable.createdAt), desc(videosTable.id))
+                .limit(limit + 1)
+            
+            const hasMore = data.length > limit
+            const items = hasMore ? data.slice(0, -1) : data
+            const lastItem = items[items.length - 1]
+            const nextCursor = lastItem ? {
+                id: lastItem.id,
+                createdAt: lastItem.createdAt,
+            } : null
+
+            return {
+                items,
+                nextCursor,
+            }
+        }),
     getOne: baseProcedure
         .input(z.object({ id: z.string().uuid() }))
         .query(async ({ input }) => {

@@ -114,7 +114,7 @@ const VideosSectionSuspense = () => {
                                                 duration={video.duration}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-1">
+                                        <div className="flex flex-col gap-1 w-72">
                                             <p className="line-clamp-1">{video.title}</p>
                                             <p className="text-xs text-muted-foreground line-clamp-1">{video.description || "Không có mô tả"}</p>
                                         </div>

@@ -54,12 +54,12 @@ const StudioSidebarUser = ({ userOut, place, size }: StudioSidebarUserProps) => 
       "flex items-center justify-center w-full",
       place === "bottom" ? "flex-col " : "flex-row gap-2",
     )}>
-      <Link href="/user/current">
-        <Avatar className={`size-${size}`}>
-          <AvatarImage src={userOut?.imageUrl ?? user?.imageUrl} />
-          <AvatarFallback>{user?.lastName}</AvatarFallback>
-        </Avatar>
-      </Link>
+      {/* <Link href="/user/current"> */}
+      <Avatar className={`size-${size}`}>
+        <AvatarImage src={userOut?.imageUrl ?? user?.imageUrl} />
+        <AvatarFallback>{user?.lastName}</AvatarFallback>
+      </Avatar>
+      {/* </Link> */}
       <p className="text-sm font-semibold">{userOut?.name ?? user?.fullName}</p>
     </div>
   );

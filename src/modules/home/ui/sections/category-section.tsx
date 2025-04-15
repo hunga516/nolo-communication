@@ -26,7 +26,7 @@ const CategoriesSectionSuspense = ({ categoryId }: CategorySectionProps) => {
 
   const newCategories = categories.map((category) => ({
     label: category.name,
-    value: JSON.stringify(category.id),
+    value: category.id,
   }));
 
   const onSelect = (value?: string | null) => {

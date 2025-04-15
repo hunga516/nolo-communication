@@ -26,14 +26,13 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
                 </div>
             </Link>
             {userId === user.clerkId ? (
-                <Button
-                    variant="secondary"
-                    asChild
-                >
-                    <Link href={`/studio/videos/${videoId}`}>
+                <Link href={`/studio/videos/${videoId}`}>
+                    <Button
+                        variant="secondary"
+                    >
                         Chỉnh sửa
-                    </Link>
-                </Button>
+                    </Button>
+                </Link>
             ) : (
                 <SubscriptionButton
                     onClick={() => { }}
