@@ -9,14 +9,14 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 interface HomeVideoSectionProps {
-    categoryId?: string;
+    categoryId: string;
 }
 
 export const HomeVideoSection = ({ categoryId }: HomeVideoSectionProps) => {
     return (
-        <Suspense fallback={<HomeVideoSectionSkeleton />}>
+        <Suspense key={categoryId} fallback={<HomeVideoSectionSkeleton />}>
             <ErrorBoundary fallback={<p>error</p>}>
-                <HomeVideoSection />
+                <HomeVideoSectionSuspense categoryId={categoryId} />
             </ErrorBoundary>
         </Suspense>
     )
@@ -42,8 +42,7 @@ const HomeVideoSectionSuspense = ({ categoryId }: HomeVideoSectionProps) => {
 
     return (
         <>
-            <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5
-        [@media(min-width:1920px)]:grid-cols-5 [@media(min-width:220px)]:grid-cols-6">
+            <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                 {videos.pages
                     .flatMap((page) => page.items)
                     .map((video) => (

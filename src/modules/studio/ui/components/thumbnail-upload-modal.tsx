@@ -1,7 +1,7 @@
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { UploadDropzone } from "@/lib/uploadthings";
-import { ReactNode } from "react";
-type ContentField = ReactNode
+// import { ReactNode } from "react";
+// type ContentField = ReactNode
 
 import './uploadthing.css'
 
@@ -12,23 +12,23 @@ interface ThumbnailUploadModalProps {
 }
 
 
-type UploadButtonProps = {
-    /* rest of props */
-    content?: {
-        button?: ContentField;
-        allowedContent?: ContentField;
-    };
-};
+// type UploadButtonProps = {
+//     /* rest of props */
+//     content?: {
+//         button?: ContentField;
+//         allowedContent?: ContentField;
+//     };
+// };
 
-type UploadDropzoneProps = {
-    /* rest of props */
-    content?: {
-        uploadIcon?: ContentField;
-        label?: ContentField;
-        allowedContent?: ContentField;
-        button?: ContentField;
-    };
-};
+// type UploadDropzoneProps = {
+//     /* rest of props */
+//     content?: {
+//         uploadIcon?: ContentField;
+//         label?: ContentField;
+//         allowedContent?: ContentField;
+//         button?: ContentField;
+//     };
+// };
 
 
 const ThumbnailUploadModal = ({
@@ -36,6 +36,7 @@ const ThumbnailUploadModal = ({
     open,
     onOpenChange,
 }: ThumbnailUploadModalProps) => {
+    console.log("videoId", videoId);
     return (
         <ResponsiveDialog
             open={open}

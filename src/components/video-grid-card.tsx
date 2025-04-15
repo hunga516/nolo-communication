@@ -4,7 +4,6 @@ import { VideoGetOneOutput } from "@/modules/video/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
-import VideoPlayer from "@/modules/video/ui/components/video-player";
 import { VideoThumbnail } from "@/modules/video/ui/components/video-thumbnail";
 
 interface VideoGridCardProps {

@@ -35,11 +35,11 @@ export const InfiniteScroll = ({
                     disabled={!hasNextPage || isFetchingNextPage}
                     onClick={() => fetchNextPage()}
                 >
-                    {isFetchingNextPage ? "loading..." : "load more"}
+                    {isFetchingNextPage ? "Đang tải ..." : "Xem thêm"}
                 </Button>
             ) : (
                 <p>
-                    ban da cuon den phan cuoi cung
+                    Bạn đã xem hết nội dung.
                 </p>
             )}
         </div>
