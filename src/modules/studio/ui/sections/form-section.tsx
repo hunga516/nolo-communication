@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { videoUpdateSchema } from "@/db/schema";
 import { trpc } from "@/trpc/client";
-import { CopyCheckIcon, CopyIcon, Globe2Icon, Lock, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, Lock, MoreVerticalIcon, RotateCcwIcon, SparkleIcon, TrashIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FormProvider, useForm } from "react-hook-form";
@@ -17,9 +17,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import VideoPlayer from "@/modules/video/ui/components/video-player";
 import Link from "next/link";
-import { set } from "date-fns";
 import { translateStatus } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { THUMBNAIL_FALLBACK } from "@/modules/video/constants";
+import ThumbnailUploadModal from "../components/thumbnail-upload-modal";
 
 
 interface FormSectionProps {
@@ -49,6 +51,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
     const [categories] = trpc.categories.getMany.useSuspenseQuery();
 
+    const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false)
 
     const update = trpc.videos.update.useMutation({
         onSuccess: () => {
@@ -94,210 +97,263 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     }
 
     return (
-        <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 className="text-2xl font-bold">Thông tin video</h1>
-                        <p className="text-xs text-muted-foreground">Quản lý video của bạn</p>
+        <>
+            <ThumbnailUploadModal
+                videoId={video.id}
+                onOpenChange={setThumbnailModalOpen}
+                open={thumbnailModalOpen}
+            />
+            <FormProvider {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 className="text-2xl font-bold">Thông tin video</h1>
+                            <p className="text-xs text-muted-foreground">Quản lý video của bạn</p>
+                        </div>
+                        <div className="flex items-center gap-x-2">
+                            <Button type="submit" disabled={update.isPending}>
+                                Lưu
+                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <MoreVerticalIcon />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => dilit.mutate({ id: videoId })}>
+                                        <TrashIcon className="size-4" />
+                                        Xoá video
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-x-2">
-                        <Button type="submit" disabled={update.isPending}>
-                            Lưu
-                        </Button>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                    <MoreVerticalIcon />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => dilit.mutate({ id: videoId })}>
-                                    <TrashIcon className="size-4" />
-                                    Xoá video
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                    <div className="space-y-8 lg:col-span-3">
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Tiêu đề
-                                        {/* add AI button */}
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder="Tiêu đề video"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Mô tả video
-                                        {/* add AI button */}
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            {...field}
-                                            value={field.value || ""}
-                                            rows={10}
-                                            placeholder="Mô tả của video"
-                                            className="resize-none pr-10"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-
-                        {/* Thumbnail */}
-                        <FormField
-                            control={form.control}
-                            name="categoryId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Doanh mục
-                                        {/* add AI button */}
-                                    </FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value || ""}
-                                    >
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                        <div className="space-y-8 lg:col-span-3">
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Tiêu đề
+                                            {/* add AI button */}
+                                        </FormLabel>
                                         <FormControl>
-                                            <SelectTrigger className="w-1/2">
-                                                <SelectValue placeholder="Chọn danh mục" />
-                                            </SelectTrigger>
+                                            <Input
+                                                {...field}
+                                                placeholder="Tiêu đề video"
+                                            />
                                         </FormControl>
-                                        <SelectContent>
-                                            {categories.map((category) => (
-                                                <SelectItem
-                                                    key={category.id}
-                                                    value={category.id}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            >
+                            </FormField>
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Mô tả video
+                                            {/* add AI button */}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                {...field}
+                                                value={field.value || ""}
+                                                rows={10}
+                                                placeholder="Mô tả của video"
+                                                className="resize-none pr-10"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            >
+                            </FormField>
+
+                            <FormField
+                                name="thumbnailUrl"
+                                control={form.control}
+                                render={() => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Thumbnail
+                                        </FormLabel>
+                                        <FormControl>
+                                            <div className="p-0.5 border border-dashed border-neutral-300 relative h-28 w-48 rounded-lg overflow-hidden group">
+                                                <Image
+                                                    fill
+                                                    alt="thumbnail"
+                                                    src={video.thumbnailUrl || THUMBNAIL_FALLBACK}
+                                                />
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="bg-black/50 hover:bg-black/50 absolute top-1 right-1
+                                                        opacity-100 md:opacity-0 group-hover:opacity-100"
+                                                        >
+                                                            <MoreVerticalIcon className="text-white" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end" side="top">
+                                                        <DropdownMenuItem onClick={() => setThumbnailModalOpen(true)}>
+                                                            <ImagePlusIcon className="size-4" />
+                                                            Thay hình khác
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem>
+                                                            <SparkleIcon className="size-4" />
+                                                            Tải hình lên
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem>
+                                                            <RotateCcwIcon className="size-4" />
+                                                            Tải lại
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="categoryId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Doanh mục
+                                            {/* add AI button */}
+                                        </FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value || ""}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="w-1/2">
+                                                    <SelectValue placeholder="Chọn danh mục" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {categories.map((category) => (
+                                                    <SelectItem
+                                                        key={category.id}
+                                                        value={category.id}
+                                                    >
+                                                        {category.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            >
+                            </FormField>
+                        </div>
+                        <div className="flex flex-col gap-y-8 lg:col-span-2">
+                            <div className="flex flex-col gap-4 bg-gray-200 overflow-hidden h-fit rounded-lg">
+                                <div className="aspect-video overflow-hidden relative">
+                                    <VideoPlayer
+                                        playbackId={video.muxPlaybackId}
+                                        thumbnailUrl={video.thumbnailUrl}
+                                    />
+                                </div>
+                                <div className="p-4 flex flex-col gap-y-6">
+                                    <div className="flex justify-between items-center gap-x-2">
+                                        <div className="flex flex-col gap-y-1">
+                                            <p className="text-xs text-muted-foreground">
+                                                Video link
+                                            </p>
+                                            <div className="flex items-center gap-x-2">
+                                                <Link href={`/videos/${video.id}`}>
+                                                    <p className="line-clamp-1 text-sm text-blue-500">
+                                                        {fullUrl}
+                                                    </p>
+                                                </Link>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    disabled={isCopied}
+                                                    onClick={onCopy}
                                                 >
-                                                    {category.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-                    </div>
-                    <div className="flex flex-col gap-y-8 lg:col-span-2">
-                        <div className="flex flex-col gap-4 bg-gray-200 overflow-hidden h-fit rounded-lg">
-                            <div className="aspect-video overflow-hidden relative">
-                                <VideoPlayer
-                                    playbackId={video.muxPlaybackId}
-                                    thumbnailUrl={video.thumbnailUrl}
-                                />
-                            </div>
-                            <div className="p-4 flex flex-col gap-y-6">
-                                <div className="flex justify-between items-center gap-x-2">
-                                    <div className="flex flex-col gap-y-1">
-                                        <p className="text-xs text-muted-foreground">
-                                            Video link
-                                        </p>
-                                        <div className="flex items-center gap-x-2">
-                                            <Link href={`/videos/${video.id}`}>
-                                                <p className="line-clamp-1 text-sm text-blue-500">
-                                                    {fullUrl}
-                                                </p>
-                                            </Link>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                disabled={isCopied}
-                                                onClick={onCopy}
-                                            >
-                                                {isCopied ? <CopyCheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
-                                            </Button>
+                                                    {isCopied ? <CopyCheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="flex justify-between items-center">
-                                    <div className="flex flex-col gap-y-1">
-                                        <p className="text-muted-foreground text-xs">
-                                            Trạng thái video
-                                        </p>
-                                        <p className="text-sm">
-                                            {translateStatus(video.muxStatus || "Đang xử lý")}
-                                        </p>
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex flex-col gap-y-1">
+                                            <p className="text-muted-foreground text-xs">
+                                                Trạng thái video
+                                            </p>
+                                            <p className="text-sm">
+                                                {translateStatus(video.muxStatus || "Đang xử lý")}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="flex justify-between items-center">
-                                    <div className="flex flex-col gap-y-1">
-                                        <p className="text-muted-foreground text-xs">
-                                            Trạng thái phụ đề
-                                        </p>
-                                        <p className="text-sm">
-                                            {translateStatus(video.muxTrackStatus || "Đang xử lý")}
-                                        </p>
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex flex-col gap-y-1">
+                                            <p className="text-muted-foreground text-xs">
+                                                Trạng thái phụ đề
+                                            </p>
+                                            <p className="text-sm">
+                                                {translateStatus(video.muxTrackStatus || "Đang xử lý")}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
+
+                            <FormField
+                                control={form.control}
+                                name="visibility"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Chế độ hiển thị
+                                            {/* add AI button */}
+                                        </FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value || ""}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="w-1/2">
+                                                    <SelectValue placeholder="Chọn chế độ hiển thị" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="public">
+                                                    <Globe2Icon className="size-4" />
+                                                    Công khai
+                                                </SelectItem>
+                                                <SelectItem value="private">
+                                                    <Lock className="size-4" />
+                                                    Riêng tư
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            >
+                            </FormField>
+
                         </div>
-
-                        <FormField
-                            control={form.control}
-                            name="visibility"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Chế độ hiển thị
-                                        {/* add AI button */}
-                                    </FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value || ""}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger className="w-1/2">
-                                                <SelectValue placeholder="Chọn chế độ hiển thị" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="public">
-                                                <Globe2Icon className="size-4" />
-                                                Công khai
-                                            </SelectItem>
-                                            <SelectItem value="private">
-                                                <Lock className="size-4" />
-                                                Riêng tư
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-
                     </div>
-                </div>
-            </form>
-        </FormProvider>
+                </form>
+            </FormProvider>
+        </>
     )
 }

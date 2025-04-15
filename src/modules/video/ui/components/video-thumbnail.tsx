@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { formatDuration } from "@/lib/utils"
 import Image from "next/image"
+import { THUMBNAIL_FALLBACK } from "../../constants"
 
 interface VideoThumbnailProps {
     imageUrl?: string | null
@@ -17,8 +18,8 @@ export const VideoThumbnail = ({
     duration,
     title
 }: VideoThumbnailProps) => {
-    const [mainSrc, setMainSrc] = useState(imageUrl ?? "/img/error-thumbnail.png");
-    const [previewSrc, setPreviewSrc] = useState(previewUrl ?? "/img/error-thumbnail.png");
+    const [mainSrc, setMainSrc] = useState(imageUrl ?? THUMBNAIL_FALLBACK);
+    const [previewSrc, setPreviewSrc] = useState(previewUrl ?? THUMBNAIL_FALLBACK);
 
     return (
         <div className="relative group">

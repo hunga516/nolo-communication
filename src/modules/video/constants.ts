@@ -1,0 +1,1 @@
+export const THUMBNAIL_FALLBACK = "/img/error-thumbnail.png";
