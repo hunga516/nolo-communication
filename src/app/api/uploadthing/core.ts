@@ -3,8 +3,8 @@ import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const auth = (req: Request) => {
-console.log(req)
  return { id: "fakeId" }
 }; // Fake auth function
 

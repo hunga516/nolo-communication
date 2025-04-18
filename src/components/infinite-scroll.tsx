@@ -21,10 +21,14 @@ export const InfiniteScroll = ({
     })
 
     useEffect(() => {
-        if (isIntersecting && hasNextPage && !isFetchingNextPage && !isManual) {
-            fetchNextPage();
-        }
-    }, [isIntersecting, hasNextPage, isFetchingNextPage, isManual, fetchNextPage])
+        const timer = setTimeout(() => {
+            if (isIntersecting && hasNextPage && !isFetchingNextPage && !isManual) {
+                fetchNextPage();
+            }
+        }, 100); // delay một chút
+
+        return () => clearTimeout(timer);
+    }, [isIntersecting, hasNextPage, isFetchingNextPage, isManual, fetchNextPage]);
 
     return (
         <div className="flex flex-col items-center gap-4 p-4">

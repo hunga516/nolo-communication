@@ -1,28 +1,28 @@
-name: Next Deloyment
+# name: Next Deloyment
 
-on:
-  push:
-    branches: [production]
+# on:
+#   push:
+#     branches: [production]
 
-jobs:
-  deloy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deloy using ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd ..
-            cd /usr/working/nolo-communication
-            git checkout production
-            git pull origin production
-            npm install --force
-            npm run build
-            docker build -t nolo .
-            docker stop nolo-container || true
-            docker rm nolo-container || true
-            docker run -d --name nolo-container -p 4000:3000 nolo
+# jobs:
+#   deloy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Deloy using ssh
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           key: ${{ secrets.PRIVATE_KEY }}
+#           port: 22
+#           script: |
+#             cd ..
+#             cd /usr/working/nolo-communication
+#             git checkout production
+#             git pull origin production
+#             npm install --force
+#             npm run build
+#             docker build -t nolo .
+#             docker stop nolo-container || true
+#             docker rm nolo-container || true
+#             docker run -d --name nolo-container -p 4000:3000 nolo

@@ -32,11 +32,12 @@ interface ThumbnailUploadModalProps {
 
 
 const ThumbnailUploadModal = ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     videoId,
     open,
     onOpenChange,
 }: ThumbnailUploadModalProps) => {
-    console.log("videoId", videoId);
+
     return (
         <ResponsiveDialog
             open={open}

@@ -84,7 +84,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         update.mutate(data)
     }
 
-    const fullUrl = `${process.env.VPS_URL || "http://localhost:3000"}/videos/${video.id}`
+    const fullUrl = `${process.env.NEXT_PUBLIC_VPS_URL || "http://localhost:3000"}/videos/${video.id}`
     const [isCopied, setIsCopied] = useState(false);
 
     const onCopy = async () => {
@@ -105,7 +105,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             />
             <FormProvider {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="sticky top-0 z-10 flex pt-2 py-4 items-center justify-between mb-4 bg-white">
                         <div>
                             <h1 className="text-2xl font-bold">Thông tin video</h1>
                             <p className="text-xs text-muted-foreground">Quản lý video của bạn</p>
@@ -269,7 +269,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                     <div className="flex justify-between items-center gap-x-2">
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs text-muted-foreground">
-                                                Video link
+                                                Đường dẫn video
                                             </p>
                                             <div className="flex items-center gap-x-2">
                                                 <Link href={`/videos/${video.id}`}>
