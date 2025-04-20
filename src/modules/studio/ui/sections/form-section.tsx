@@ -75,6 +75,17 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         }
     })
 
+    const handleRestoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
+        onSuccess: () => {
+            utils.studio.getOne.invalidate({ id: videoId });
+            utils.studio.getMany.invalidate();
+            toast.success("Đã khôi phục hình thu nhỏ")
+        },
+        onError: () => {
+            toast.error("Không thể khôi phục hình thu nhỏ")
+        }
+    })
+
     const form = useForm<z.infer<typeof videoUpdateSchema>>({
         resolver: zodResolver(videoUpdateSchema),
         defaultValues: video,
@@ -210,9 +221,9 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                                             <SparkleIcon className="size-4" />
                                                             Tải hình lên
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleRestoreThumbnail.mutate({ id: videoId })}>
                                                             <RotateCcwIcon className="size-4" />
-                                                            Tải lại
+                                                            Tải lại hình gốc
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>

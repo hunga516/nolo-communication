@@ -7,6 +7,42 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const videoRouter = createTRPCRouter({
+    restoreThumbnail: protectedProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .mutation(async ({ input, ctx }) => {
+            const { id: userId } = ctx.user
+            
+            const [existingVideo] = await db
+                .select()
+                .from(videosTable)
+                .where(and(
+                    eq(videosTable.id, input.id),
+                    eq(videosTable.userId, userId)
+                ))
+            
+            if (!existingVideo) {
+                throw new TRPCError({ code: 'NOT_FOUND', message: 'Video not found for you dont have permisson to update it' });
+            }
+
+            if (!existingVideo.muxPlaybackId) {
+                throw new TRPCError({ code: 'NOT_FOUND', message: 'muxPlaybackId not found' }); 
+            }
+
+            const thumbnailUrl = `https://image.mux.com/${existingVideo.muxPlaybackId}/thumbnail.jpg`
+
+            const [updatedVideo] = await db
+                .update(videosTable)
+                .set({
+                    thumbnailUrl: thumbnailUrl,
+                })
+                .where(and(
+                    eq(videosTable.id, input.id),
+                    eq(videosTable.userId, userId)
+                ))
+                .returning()
+            
+            return updatedVideo
+        }),
     getMany: baseProcedure
         .input(z.object({
             categoryId: z.string().uuid().nullish(),
