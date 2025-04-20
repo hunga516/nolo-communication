@@ -1,17 +1,18 @@
+import { db } from "@/db";
+import { videosTable } from "@/db/schema";
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
+import { z } from "zod";
 
 const f = createUploadthing();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const auth = (req: Request) => {
- return { id: "fakeId" }
-}; // Fake auth function
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  imageUploader: f({
+  thumbnailUploader: f({
     image: {
       /**
        * For full list of options and defaults, see the File Route API reference
@@ -21,25 +22,28 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
   })
+    .input(z.object({ videoId: z.string() }))
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async ({ input }) => {
       // This code runs on your server before upload
-      const user = await auth(req);
+      const { userId } = await auth();
 
       // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!userId) throw new UploadThingError("Unauthorized");
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+      return { userId, ...input };
     })
-    .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+    .onUploadComplete(async ({ metadata, file }) => {  //metadata is the input you passed to the upload function
 
-      console.log("file url", file.ufsUrl);
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      console.log(metadata, file);
+      
+      await db
+        .update(videosTable)
+        .set({
+          thumbnailUrl: file.url,
+        })
+        .where(eq(videosTable.id, metadata.videoId))
     }),
 } satisfies FileRouter;
 
