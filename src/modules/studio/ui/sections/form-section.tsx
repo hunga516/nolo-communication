@@ -75,6 +75,16 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         }
     })
 
+    const handleGenerateThumbnail = trpc.videos.generateThumbnail.useMutation({
+        onSuccess: () => {
+            toast.success("Đang tạo hình thu nhỏ", { description: "Vui lòng chờ trong giây lát" })
+        },
+        onError: () => {
+            toast.error("Không thể tạo hình thu nhỏ")
+        }
+    })
+
+
     const handleRestoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
         onSuccess: () => {
             utils.studio.getOne.invalidate({ id: videoId });
@@ -217,9 +227,11 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                                             <ImagePlusIcon className="size-4" />
                                                             Thay hình khác
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleGenerateThumbnail.mutate({ id: videoId })}
+                                                        >
                                                             <SparkleIcon className="size-4" />
-                                                            Tải hình lên
+                                                            Tạo hình ảnh
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem onClick={() => handleRestoreThumbnail.mutate({ id: videoId })}>
                                                             <RotateCcwIcon className="size-4" />
