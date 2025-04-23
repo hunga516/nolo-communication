@@ -41,8 +41,8 @@ export default clerkMiddleware(async (auth, req) => {
 
   console.log('Thông điệp từ server:', data2.message);  // Kiểm tra trường 'message' trong dữ liệu trả về
 
-} catch (error: any) {
-  console.error('Đã xảy ra lỗi:', error.message);
+} catch (e) {
+  console.error('Đã xảy ra lỗi:', e);
 }
 
     

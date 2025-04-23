@@ -30,6 +30,10 @@
         return existingVideo
       })
 
+      const transcript = await context.run("get-transcript", async () => {
+        const trackUrl = `https://stream.mux.com/${existingVideo.muxPlaybackId}/text/${existingVideo.muxTrackId}`
+      })
+
       const { body } = await context.api.openai.call(
         "generate-title",
         {

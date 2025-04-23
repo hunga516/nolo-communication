@@ -201,7 +201,7 @@ export const videoRouter = createTRPCRouter({
             .insert(videosTable)
             .values({
                 userId,
-                title: "test1",
+                title: "Tiêu đề mặc định",
                 muxStatus: "waiting",
                 muxUploadId: upload.id,
             })
