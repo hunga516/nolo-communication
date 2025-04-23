@@ -5,7 +5,7 @@
   "scripts": {
     "dev:all": "concurrently  \"npm run dev:webhook-local\" \"npm run dev\"",
     "dev:webhook-local": "ngrok http --url=sunbird-knowing-blowfish.ngrok-free.app 3000",
-    "dev:webhook": "ngrok http --url=sunbird-knowing-blowfish.ngrok-free.app 4000",
+    "dev:webhook": "ngrok http --url=sunbird-knowing-blowfish.ngrok-free.app 3000",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
