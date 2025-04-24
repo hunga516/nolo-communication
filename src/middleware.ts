@@ -11,39 +11,39 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-   try {
-  // Lấy IP từ API
-  const response = await fetch('http://103.249.200.149:5000/get_my_ip');
+//    try {
+//   // Lấy IP từ API
+//   const response = await fetch('http://103.249.200.149:5000/get_my_ip');
   
-  if (!response.ok) {
-    throw new Error('Không thể lấy IP từ API');
-  }
+//   if (!response.ok) {
+//     throw new Error('Không thể lấy IP từ API');
+//   }
 
-  const data = await response.json();
-  const clientIp = data;  // Giả sử 'data' chứa trường 'ip'
+//   const data = await response.json();
+//   const clientIp = data;  // Giả sử 'data' chứa trường 'ip'
 
-  console.log('Địa chỉ IP của client:', clientIp);
+//   console.log('Địa chỉ IP của client:', clientIp);
 
-  // Kiểm tra số lượng yêu cầu từ IP này
-  const response2 = await fetch('http://103.249.200.149:5000/check_request_limit', {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ ip: clientIp }),
-  });
+//   // Kiểm tra số lượng yêu cầu từ IP này
+//   const response2 = await fetch('http://103.249.200.149:5000/check_request_limit', {
+//     method: "POST",
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ ip: clientIp }),
+//   });
 
-  if (!response2.ok) {
-    throw new Error('Không thể kiểm tra giới hạn yêu cầu');
-  }
+//   if (!response2.ok) {
+//     throw new Error('Không thể kiểm tra giới hạn yêu cầu');
+//   }
 
-  const data2 = await response2.json();
+//   const data2 = await response2.json();
 
-  console.log('Thông điệp từ server:', data2.message);  // Kiểm tra trường 'message' trong dữ liệu trả về
+//   console.log('Thông điệp từ server:', data2.message);  // Kiểm tra trường 'message' trong dữ liệu trả về
 
-} catch (e) {
-  console.error('Đã xảy ra lỗi:', e);
-}
+// } catch (e) {
+//   console.error('Đã xảy ra lỗi:', e);
+// }
 
     
   

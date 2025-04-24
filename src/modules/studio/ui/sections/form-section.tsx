@@ -185,7 +185,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                                     className="rounded-full size-6 [&_svg]:size-3"
                                                     type="button"
                                                     onClick={() => handleGenerateTitle.mutate({ id: videoId })}
-                                                    disabled={handleGenerateTitle.isPending}
+                                                    disabled={handleGenerateTitle.isPending || !video.muxTrackId}
                                                 >
                                                     {handleGenerateTitle.isPending ? (
                                                         <Loader2Icon className="animate-spin" />
@@ -220,7 +220,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                                     className="rounded-full size-6 [&_svg]:size-3"
                                                     type="button"
                                                     onClick={() => handleGenerateDescription.mutate({ id: videoId })}
-                                                    disabled={handleGenerateDescription.isPending}
+                                                    disabled={handleGenerateDescription.isPending || !video.muxTrackId}
                                                 >
                                                     {handleGenerateDescription.isPending ? (
                                                         <Loader2Icon className="animate-spin" />

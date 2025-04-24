@@ -38,7 +38,7 @@ export const videoRouter = createTRPCRouter({
             const { id: userId } = ctx.user
             
             const { workflowRunId } = await workflow.trigger({
-                url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflow/thumbnai;`,
+                url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflow/thumbnail`,
                 body: { userId, videoId: input.id  },
             });
             

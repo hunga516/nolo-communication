@@ -2,10 +2,8 @@ import { db } from "@/db"
 import { videosTable } from "@/db/schema"
 import { serve } from "@upstash/workflow/nextjs"
 import { and, eq } from "drizzle-orm"
-import fs from "fs";
 import OpenAI from "openai";
 
-const openai = new OpenAI();
 
 
 interface InputType {
@@ -13,7 +11,6 @@ interface InputType {
   videoId: string
 }
 
-const TITLE_PROMT = "Tạo ra hình ảnh cho tiêu đề của tôi nhé, hãy tạo sao cho đẹp và có hiệu ứng 3d nội bật theo nội dung tôi sẽ gửi nhé"
 
 export const { POST } = serve(
   async (context) => {
@@ -35,43 +32,30 @@ export const { POST } = serve(
       return existingVideo
     })
 
-    // const thumbnailUrl = await context.run("get-thumbnail", async () => {
-    //   const thumbnailUrl = await openai.audio.transcriptions.create({
-    //     file: fs.createReadStream("/Users/lengocloc/Documents/cloud-cache/vi-frontend/public/music/justin.mp4"),
-    //     model: "gpt-4o-transcribe",
-    //   });
+    await context.run("generate-thumbnail", async () => {
+      const openai = new OpenAI();
 
-    //   return thumbnailUrl
-    // })
+     const result = await openai.images.generate({
+          model: "dall-e-2",
+          prompt: "a white siamese cat",
+          response_format: "url",
+          size: "1024x1024",
+      });
 
-    const { body } = await context.api.openai.call(
-      "generate-thumbnail",
-      {
-        token: process.env.OPENAI_API_KEY!,
-        operation: "chat.completions.create",
-        body: {
-          model: "gpt-4o",
-          messages: [
-            {
-              role: "system",
-              content: TITLE_PROMT,
-            },
-            {
-              role: "user",
-              content: existingVideo.title
-            }
-          ],
-        },
+      if (!result.data || result.data.length === 0) {
+        throw new Error("OpenAI không trả về data");
       }
-    );
 
-    const newTitle = body.choices[0].message.content
+      // Lấy URL của ảnh
+      const imageUrl = result.data[0].url;
+      console.log("Image URL:", imageUrl);
+    })
 
     await context.run("update-video", async () => {
       await db
         .update(videosTable)
         .set({
-          title: newTitle || existingVideo.title
+          title: existingVideo.title
         })
         .where(and(
           eq(videosTable.id, existingVideo.id),
