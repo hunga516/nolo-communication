@@ -8,13 +8,37 @@ import { z } from "zod";
 import { workflow } from "@/lib/workflow";
 
 export const videoRouter = createTRPCRouter({
-    generateThumbnail: protectedProcedure
+    generateDescription: protectedProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .mutation(async ({ctx, input}) => {
+            const { id: userId } = ctx.user
+            
+            const { workflowRunId } = await workflow.trigger({
+                url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflow/description`,
+                body: { userId, videoId: input.id  },
+            });
+            
+            return workflowRunId
+        }),
+    generateTitle: protectedProcedure
         .input(z.object({ id: z.string().uuid() }))
         .mutation(async ({ctx, input}) => {
             const { id: userId } = ctx.user
             
             const { workflowRunId } = await workflow.trigger({
                 url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflow/title`,
+                body: { userId, videoId: input.id  },
+            });
+            
+            return workflowRunId
+        }),
+    generateThumbnail: protectedProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .mutation(async ({ctx, input}) => {
+            const { id: userId } = ctx.user
+            
+            const { workflowRunId } = await workflow.trigger({
+                url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflow/thumbnai;`,
                 body: { userId, videoId: input.id  },
             });
             
