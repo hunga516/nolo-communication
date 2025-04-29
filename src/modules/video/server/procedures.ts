@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure, baseProcedure } from "@/trpc/init";
 import { db } from "@/db";
-import { usersTable, videosTable, videoUpdateSchema } from "@/db/schema";
+import { usersTable, videoReactions, videosTable, videoUpdateSchema, videoViews } from "@/db/schema";
 import { mux } from "@/lib/mux";
 import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -98,7 +98,18 @@ export const videoRouter = createTRPCRouter({
                     ...getTableColumns(videosTable),
                     user: {
                         ...getTableColumns(usersTable),
-                    }
+                    },
+                    viewCounts: db.$count(videoViews, eq(videoViews.videoId, videosTable.id)),
+                    likeCounts: db.$count(videoReactions,
+                        and(
+                            eq(videoReactions.videoId, videosTable.id),
+                            eq(videoReactions.type, "like")
+                        )),
+                    dislikeCounts: db.$count(videoReactions,
+                        and(
+                            eq(videoReactions.videoId, videosTable.id),
+                            eq(videoReactions.type, "dislike")
+                        ))
                 })
                 .from(videosTable)
                 .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))
@@ -138,7 +149,18 @@ export const videoRouter = createTRPCRouter({
                     ...getTableColumns(videosTable),
                     user: {
                         ...getTableColumns(usersTable),
-                    }
+                    },
+                    viewCounts: db.$count(videoViews, eq(videoViews.videoId, videosTable.id)),
+                    likeCounts: db.$count(videoReactions,
+                        and(
+                            eq(videoReactions.videoId, videosTable.id),
+                            eq(videoReactions.type, "like")
+                        )),
+                    dislikeCounts: db.$count(videoReactions,
+                        and(
+                            eq(videoReactions.videoId, videosTable.id),
+                            eq(videoReactions.type, "dislike")
+                        ))
                 })
                 .from(videosTable)
                 .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))

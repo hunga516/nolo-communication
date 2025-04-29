@@ -2,10 +2,10 @@ import { db } from "@/db"
 import { videosTable } from "@/db/schema"
 import { serve } from "@upstash/workflow/nextjs"
 import { and, eq } from "drizzle-orm"
-import fs from "fs";
-import OpenAI from "openai";
+// import fs from "fs";
+// import OpenAI from "openai";
 
-const openai = new OpenAI();
+// const openai = new OpenAI();
 
 
 interface InputType {
@@ -47,14 +47,14 @@ export const { POST } = serve(
       return text
     })
 
-    const transcription = await context.run("get-mtp-lyrics", async () => {
-      const transcription = await openai.audio.transcriptions.create({
-        file: fs.createReadStream("/Users/lengocloc/Documents/cloud-cache/vi-frontend/public/music/justin.mp4"),
-        model: "gpt-4o-transcribe",
-      });
+    // const transcription = await context.run("get-mtp-lyrics", async () => {
+    //   const transcription = await openai.audio.transcriptions.create({
+    //     file: fs.createReadStream("/Users/lengocloc/Documents/cloud-cache/vi-frontend/public/music/justin.mp4"),
+    //     model: "gpt-4o-transcribe",
+    //   });
 
-      return transcription
-    })
+    //   return transcription
+    // })
 
     const { body } = await context.api.openai.call(
       "generate-title",
