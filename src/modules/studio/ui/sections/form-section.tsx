@@ -254,7 +254,7 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                                             Thumbnail
                                         </FormLabel>
                                         <FormControl>
-                                            <div className="p-0.5 border border-dashed border-neutral-300 relative h-28 w-48 rounded-lg overflow-hidden group">
+                                            <div className="p-0.5 border border-dashed border-neutral-300 relative w-2xs rounded-lg overflow-hidden group">
                                                 {/* <Image
                                                     fill
                                                     alt="thumbnail"

@@ -29,7 +29,7 @@ export const VideoThumbnail = ({
                     alt={title}
                     fill
                     unoptimized
-                    className="size-full group-hover:opacity-0"
+                    className="size-full group-hover:opacity-0 object-contain bg-black"
                     onError={() => setMainSrc("/img/only-audio-thumbnail.png")}
                 />
                 <Image
@@ -37,7 +37,7 @@ export const VideoThumbnail = ({
                     alt={title}
                     fill
                     unoptimized
-                    className="size-full opacity-0 group-hover:opacity-100"
+                    className="size-full opacity-0 group-hover:opacity-100 object-contain bg-black"
                     onError={() => setPreviewSrc("/img/only-audio-thumbnail.png")}
                 />
 

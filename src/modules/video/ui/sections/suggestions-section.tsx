@@ -39,7 +39,10 @@ const SuggestionSectionSuspense = () => {
 
     return (
         <>
-            <div className="gap-4 gap-y-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
+            <p className="font-medium mb-2 text-gray-900 dark:text-white">
+                Có thể bạn thích
+            </p>
+            <div className="gap-2 gap-y-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
                 {videos.pages
                     .flatMap((page) => page.items)
                     .map((video) => (
