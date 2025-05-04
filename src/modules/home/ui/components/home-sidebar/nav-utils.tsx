@@ -8,6 +8,7 @@ import {
   NotebookPen,
   Store,
   Trash2,
+  ZoomIn,
 } from "lucide-react";
 
 import {
@@ -45,6 +46,11 @@ const utils = [
     name: "Bản đồ thế giới",
     url: "/ban-do-the-gioi",
     icon: Map,
+  },
+  {
+    name: "Meeting",
+    url: "/meeting",
+    icon: ZoomIn,
   },
 ];
 
