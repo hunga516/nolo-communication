@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure, baseProcedure } from "@/trpc/init
 import { db } from "@/db";
 import { usersTable, videoReactions, videosTable, videoUpdateSchema, videoViews } from "@/db/schema";
 import { mux } from "@/lib/mux";
-import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, lt, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { workflow } from "@/lib/workflow";
@@ -142,16 +142,38 @@ export const videoRouter = createTRPCRouter({
         }),
     getOne: baseProcedure
         .input(z.object({ id: z.string().uuid() }))
-        .query(async ({ input }) => {
+        .query(async ({ input, ctx }) => {
+            const { clerkUserId } = ctx
 
+            let userId;
+
+            const [user] = await db
+                .select()
+                .from(usersTable)
+                .where(inArray(usersTable.clerkId, clerkUserId ? [clerkUserId] : []))
+            
+            if (user) {
+                userId = user.id   
+            }
+            const viewerReactionTemp = db.$with("viewer_reactions").as(
+                db
+                    .select({
+                        type: videoReactions.type,
+                        videoId: videoReactions.videoId,
+                    })
+                    .from(videoReactions)
+                    .where(inArray(videoReactions.userId, userId ? [userId] : []))
+            )
+            
             const [existingVdieo] = await db
+                .with(viewerReactionTemp)
                 .select({
                     ...getTableColumns(videosTable),
                     user: {
                         ...getTableColumns(usersTable),
                     },
                     viewCounts: db.$count(videoViews, eq(videoViews.videoId, videosTable.id)),
-                    likeCounts: db.$count(videoReactions,
+                    likeCounts: db.$count(videoReactions, 
                         and(
                             eq(videoReactions.videoId, videosTable.id),
                             eq(videoReactions.type, "like")
@@ -160,11 +182,18 @@ export const videoRouter = createTRPCRouter({
                         and(
                             eq(videoReactions.videoId, videosTable.id),
                             eq(videoReactions.type, "dislike")
-                        ))
+                        )),
+                    viewerReaction: viewerReactionTemp.type,
                 })
                 .from(videosTable)
                 .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))
+                .leftJoin(viewerReactionTemp, eq(videosTable.id, viewerReactionTemp.videoId))
                 .where(eq(videosTable.id, input.id))
+                // .groupBy(
+                //     videosTable.id,
+                //     usersTable.id,
+                //     viewerReactionTemp.type,
+                // )
 
             if (!existingVdieo) {
                 throw new TRPCError({ code: 'NOT_FOUND', message: 'Video not found' });
