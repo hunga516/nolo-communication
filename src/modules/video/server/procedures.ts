@@ -159,7 +159,7 @@ export const videoRouter = createTRPCRouter({
                 db
                     .select({
                         type: videoReactions.type,
-                        videoId: videoReactions.videoId,
+                        videoId: videoReactions.videoId, //for left join
                     })
                     .from(videoReactions)
                     .where(inArray(videoReactions.userId, userId ? [userId] : []))

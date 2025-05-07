@@ -28,6 +28,31 @@ export const usersTable = pgTable(
   (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)]
 ); //index for clerkId
 
+export const subscriptionsTable = pgTable("subscriptions", {
+  creatorId: uuid("creator_id").references(() => usersTable.id, { onDelete: "cascade" }).notNull(),
+  subscriberId: uuid("subscriber_id").references(() => usersTable.id, { onDelete: "cascade" }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (t) => [
+  primaryKey({
+    name: "subscriptions_pk",
+    columns: [t.creatorId, t.subscriberId],
+  })
+])
+
+export const subscriptionsRelations = relations(subscriptionsTable, ({ one }) => ({
+  creator: one(usersTable, {
+    fields: [subscriptionsTable.creatorId],
+    references: [usersTable.id],
+    relationName: "creator",
+  }),
+  subscriber: one(usersTable, {
+    fields: [subscriptionsTable.subscriberId],
+    references: [usersTable.id],
+    relationName: "subscriber",
+  })
+}))
+
 export const categoriesTable = pgTable(
   "categories",
   {
@@ -76,11 +101,17 @@ export const videoInsertSchema = createInsertSchema(videosTable)
 export const videoUpdateSchema = createUpdateSchema(videosTable)
 export const videoSelectSchema = createSelectSchema(videosTable)
 
-export const userRelations = relations(usersTable, ({ many }) => ({
+export const usersRelations = relations(usersTable, ({ many }) => ({
   videos: many(videosTable),
   videoViews: many(videoViews),
   videoReactions: many(videoReactions),
-  comments: many(commentsTable)
+  comments: many(commentsTable),
+  subscriptions: many(subscriptionsTable, {
+    relationName: "creator",
+  }),
+  subscribers: many(subscriptionsTable, {
+    relationName: "subscriber",
+  })
 }));
 
 export const videoViews = pgTable("video_views", {
@@ -126,11 +157,11 @@ export const videoReactions = pgTable("video_reactions", {
 ])
 
 export const videoReactionRelations = relations(videoReactions, ({ one }) => ({
-  users: one(usersTable, {
+  users: one(usersTable, { //should be one => user
     fields: [videoReactions.userId],
     references: [usersTable.id]
   }),
-  videos: one(videosTable, {
+  videos: one(videosTable, { //should be one => video
     fields: [videoReactions.videoId],
     references: [videosTable.id]
   })
