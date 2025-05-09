@@ -101,9 +101,6 @@ export const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         }
     })
 
-
-
-
     const handleRestoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
         onSuccess: () => {
             utils.studio.getOne.invalidate({ id: videoId });
