@@ -33,7 +33,7 @@ export const protectedProcedure = t.procedure.use(
     const { ctx } = opts;
 
     if (!ctx.clerkUserId) {
-      throw new TRPCError({ code: "BAD_GATEWAY" });
+      throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
     const data = await db

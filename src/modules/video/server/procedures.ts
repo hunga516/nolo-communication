@@ -1,8 +1,8 @@
 import { createTRPCRouter, protectedProcedure, baseProcedure } from "@/trpc/init";
 import { db } from "@/db";
-import { usersTable, videoReactions, videosTable, videoUpdateSchema, videoViews } from "@/db/schema";
+import { subscriptionsTable, usersTable, videoReactions, videosTable, videoUpdateSchema, videoViews } from "@/db/schema";
 import { mux } from "@/lib/mux";
-import { and, desc, eq, getTableColumns, inArray, lt, or } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, isNotNull, lt, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { workflow } from "@/lib/workflow";
@@ -164,13 +164,22 @@ export const videoRouter = createTRPCRouter({
                     .from(videoReactions)
                     .where(inArray(videoReactions.userId, userId ? [userId] : []))
             )
+
+            const viewerSubscriptionTemp = db.$with("viewer_subsriptions").as(
+                db
+                    .select()
+                    .from(subscriptionsTable)
+                    .where(inArray(subscriptionsTable.subscriberId, userId ? [userId] : []))
+            )
             
             const [existingVdieo] = await db
-                .with(viewerReactionTemp)
+                .with(viewerReactionTemp, viewerSubscriptionTemp)
                 .select({
                     ...getTableColumns(videosTable),
                     user: {
                         ...getTableColumns(usersTable),
+                        subscriberCount: db.$count(subscriptionsTable, eq(subscriptionsTable.creatorId, usersTable.id)),
+                        isSubscriberSubscribed: isNotNull(viewerSubscriptionTemp.subscriberId).mapWith(Boolean), //check if subscriber is subscribed to creator
                     },
                     viewCounts: db.$count(videoViews, eq(videoViews.videoId, videosTable.id)),
                     likeCounts: db.$count(videoReactions, 
@@ -188,6 +197,7 @@ export const videoRouter = createTRPCRouter({
                 .from(videosTable)
                 .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))
                 .leftJoin(viewerReactionTemp, eq(videosTable.id, viewerReactionTemp.videoId))
+                .leftJoin(viewerSubscriptionTemp, eq(viewerSubscriptionTemp.creatorId,usersTable.id))
                 .where(eq(videosTable.id, input.id))
                 // .groupBy(
                 //     videosTable.id,

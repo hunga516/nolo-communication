@@ -1,17 +1,27 @@
+"use client"
+
 import Link from "next/link";
 import { VideoGetOneOutput } from "../../types";
 import StudioSidebarUser from "@/modules/studio/ui/components/studio-sidebar/studio-sidebar-user";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { SubscriptionButton } from "@/modules/subscriptions/ui/components/subscription-button";
+import { useSubscription } from "@/modules/subscriptions/hooks/useSupscription";
+
 
 interface VideoOwnerProps {
     user: VideoGetOneOutput['user']
-    videoId: string
+    videoId: string,
+    subscriberCount: number
 }
 
-export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
-    const { userId } = useAuth();
+export const VideoOwner = ({ user, videoId, subscriberCount }: VideoOwnerProps) => {
+    const { userId, isLoaded } = useAuth();
+    const { isPending, handleSubscription } = useSubscription({
+        userId: user.id,
+        isSubscribed: user.isSubscriberSubscribed,
+        fromVideoId: videoId
+    })
 
     return (
         <div className="flex items-center justify-between sm:justify-start gap-3 min-w-0">
@@ -20,9 +30,9 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
             >
                 <div className="flex items-center gap-2 min-w-0">
                     <StudioSidebarUser userOut={user} place="left" size={9} />
-                    {/* <span className="text-sm text-muted-foreground text-nowrap">
-                        {0} người đăng ký
-                    </span> */}
+                    <span className="text-sm text-muted-foreground text-nowrap">
+                        {subscriberCount} người đăng ký
+                    </span>
                 </div>
             </Link>
             {userId === user.clerkId ? (
@@ -35,9 +45,9 @@ export const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
                 </Link>
             ) : (
                 <SubscriptionButton
-                    onClick={() => { }}
-                    disabled={false}
-                    isSubscribed={false}
+                    onClick={handleSubscription}
+                    disabled={isPending || !isLoaded}
+                    isSubscribed={user.isSubscriberSubscribed}
                     className="flex-none"
                     size="sm"
                 />

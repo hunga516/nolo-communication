@@ -22,4 +22,23 @@ export const subscriptionRouter = createTRPCRouter({
             
             return newSubsription
         }),
+     remove: protectedProcedure
+        .input(z.object({ userId: z.string().uuid() }))
+        .mutation(async ({ ctx, input }) => {
+            const { userId } = input
+
+            if(userId === ctx.user.id){
+                throw new TRPCError({code: "BAD_REQUEST"})
+            }
+
+            const [removeSubscription] = await db
+                .delete(subscriptionsTable)
+                .where(and(
+                    eq(subscriptionsTable.subscriberId, ctx.user.id),
+                    eq(subscriptionsTable.creatorId, userId)
+                ))
+                .returning()
+            
+            return removeSubscription
+        }),
 })
