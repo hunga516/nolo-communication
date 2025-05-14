@@ -1,6 +1,6 @@
 import axiosInstance from '../axios';
 
-interface Item {
+export interface Item {
     _id: string;
     name: string;
     description: string;

@@ -34,6 +34,7 @@ export default function RootLayout({
             <Toaster />
             {children}
           </TRPCProvider>
+          <div id="modal-root"></div>
         </body>
       </html>
     </ClerkProvider>
