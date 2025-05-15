@@ -16,12 +16,12 @@ export const metadata = {
 };
 
 const items = [
-  { icon: <Swords size={24} />, label: "Vũ khí", bg: "bg-red-200" },
-  { icon: <Shield size={24} />, label: "Giáp", bg: "bg-blue-200" },
-  { icon: <Flame size={24} />, label: "Phép thuật", bg: "bg-orange-200" },
-  { icon: <Heart size={24} />, label: "Hồi máu", bg: "bg-pink-200" },
-  { icon: <Gem size={24} />, label: "Trang sức", bg: "bg-purple-200" },
-  { icon: <Skull size={24} />, label: "Kỹ năng", bg: "bg-green-200" },
+  { icon: <Swords size={24} />, url: "/img/wp.png", label: "Vũ khí", bg: "bg-red-200" },
+  { icon: <Shield size={24} />, url: "/img/armor.png", label: "Giáp", bg: "bg-blue-200" },
+  { icon: <Flame size={24} />, url: "/img/magic.png", label: "Phép thuật", bg: "bg-orange-200" },
+  { icon: <Heart size={24} />, url: "/img/heal.png", label: "Hồi máu", bg: "bg-pink-200" },
+  { icon: <Gem size={24} />, url: "/img/accessory.png", label: "Trang sức", bg: "bg-purple-200" },
+  { icon: <Skull size={24} />, url: "/img/skill.png", label: "Kỹ năng", bg: "bg-green-200" },
 ]
 
 export default function RootLayout(props: {
@@ -30,19 +30,19 @@ export default function RootLayout(props: {
 }) {
   return (
     <div className="p-4">
-      <div className="relative overflow-hidden rounded-lg w-full h-[200px] bg-[url(/img/background-grid-white.jpg)] bg-cover bg-center">
-        <div className="p-8 flex items-center justify-between h-full">
+      <div className="relative overflow-hidden rounded-lg w-full h-[140px] bg-[url(/img/background-grid-white.jpg)] bg-cover bg-center">
+        <div className="p-6 flex items-center justify-between h-full">
           <div className="flex flex-col justify-between h-full">
             <h1 className="text-black font-semibold text-4xl">Cửa hàng vật phẩm</h1>
-            <Button className="text-white max-w-fit">Xem sản phẩm đang khuyến mãi</Button>
+            <Button className="text-white max-w-fit text-sm">Xem sản phẩm đang khuyến mãi</Button>
           </div>
           <div>
             <Image
               src="/img/shopping-png.png"
               alt="shopping"
-              width={120}
-              height={100}
-              className="object-cover"
+              width={70}
+              height={70}
+              className=""
             />
           </div>
         </div>
@@ -51,9 +51,16 @@ export default function RootLayout(props: {
         {items.map((item, idx) => (
           <div
             key={idx}
-            className={`${item.bg} rounded-lg p-4 flex flex-col justify-center items-center gap-2`}
+            className={`border rounded-lg p-4 flex justify-center items-center gap-2`}
           >
-            {item.icon}
+            {/* {item.icon} */}
+            <Image
+              src={`${item.url}`}
+              alt={item.label}
+              width={24}
+              height={24}
+              className="object-cover"
+            />
             <p>{item.label}</p>
           </div>
         ))}
