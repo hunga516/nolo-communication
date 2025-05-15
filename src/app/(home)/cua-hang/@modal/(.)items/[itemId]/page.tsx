@@ -3,7 +3,7 @@ import { DetailItem } from "../../../items/[itemId]/detail-item";
 import Modal from "./modal";
 
 interface PageProps {
-  params: { itemId: string }
+  params: Promise<{ itemId: string }>
 }
 
 const Page = async ({ params }: PageProps) => {

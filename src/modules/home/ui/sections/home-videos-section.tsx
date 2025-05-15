@@ -47,7 +47,8 @@ const HomeVideoSectionSuspense = ({ categoryId }: HomeVideoSectionProps) => {
                     .flatMap((page) => page.items)
                     .map((video) => (
                         <VideoGridCard key={video.id} video={video} />
-                    ))}
+                    ))
+                }
             </div>
             <InfiniteScroll
                 hasNextPage={query.hasNextPage}

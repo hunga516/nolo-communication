@@ -90,10 +90,33 @@ export const videoRouter = createTRPCRouter({
                 .nullish(),
             limit: z.number().min(1).max(100),
         }))
-        .query(async ({ input }) => { 
+        .query(async ({ input, ctx }) => { 
             const { cursor, limit, categoryId } = input
+            const { clerkUserId } = ctx
+
+            let userId;
+
+            const [user] = await db
+                .select()
+                .from(usersTable)
+                .where(inArray(usersTable.clerkId, clerkUserId ? [clerkUserId] : []))
+            
+            if (user) {
+                userId = user.id   
+            }
+
+            const viewerReactionTemp = db.$with("viewer_reactions").as(
+                db
+                    .select({
+                        type: videoReactions.type,
+                        videoId: videoReactions.videoId, //for left join
+                    })
+                    .from(videoReactions)
+                    .where(inArray(videoReactions.userId, userId ? [userId] : []))
+            )
             
             const data = await db
+                .with(viewerReactionTemp)
                 .select({
                     ...getTableColumns(videosTable),
                     user: {
@@ -109,10 +132,12 @@ export const videoRouter = createTRPCRouter({
                         and(
                             eq(videoReactions.videoId, videosTable.id),
                             eq(videoReactions.type, "dislike")
-                        ))
+                        )),
+                    viewerReaction: viewerReactionTemp.type,
                 })
                 .from(videosTable)
                 .innerJoin(usersTable, eq(usersTable.id, videosTable.userId))
+                .leftJoin(viewerReactionTemp, eq(videosTable.id, viewerReactionTemp.videoId))
                 .where(and(
                     eq(videosTable.visibility, "public"),
                     categoryId ? eq(videosTable.categoryId, categoryId) : undefined,

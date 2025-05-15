@@ -2,7 +2,7 @@ import { readItemById } from "@/app/api/items/items.api";
 import { DetailItem } from "./detail-item";
 
 interface PageProps {
-    params: { itemId: string }
+    params: Promise<{ itemId: string }>
 }
 
 const Page = async ({ params }: PageProps) => {
