@@ -30,10 +30,11 @@ export default function RootLayout(props: {
 }) {
   return (
     <div className="p-4">
-      <div className="relative overflow-hidden rounded-lg w-full h-[140px] bg-[url(/img/background-grid-white.jpg)] bg-cover bg-center">
-        <div className="p-6 flex items-center justify-between h-full">
+      <div className="relative overflow-hidden rounded-lg w-full h-[140px]">
+        <div className="absolute inset-0 bg-[url('/img/neon.jpg')] bg-cover bg-center blur-[2px]"></div>
+        <div className="absolute p-6 flex items-center justify-between w-full h-full z-20">
           <div className="flex flex-col justify-between h-full">
-            <h1 className="text-black font-semibold text-4xl">Cửa hàng vật phẩm</h1>
+            <h1 className="text-white font-semibold text-4xl">Cửa hàng vật phẩm</h1>
             <Button className="text-white max-w-fit text-sm">Xem sản phẩm đang khuyến mãi</Button>
           </div>
           <div>
