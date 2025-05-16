@@ -14,18 +14,18 @@ export const DetailItem = ({ item, isMobile = false }: DetailItemProps) => {
         <div
             className={`mt-12 mx-auto bg-white ${isMobile ? "w-[300px] h-[700px] overflow-auto" : "max-w-screen-2xl"}`}
         >
-            <div className={`${isMobile ? "" : "grid sm:grid-cols-2 md:grid-cols-3 gap-4"} mt-4`}>
-                <div className="w-full">
-                    <div className="relative h-[300px]">
+            <div className={`${isMobile ? "" : "flex gap-4"} mt-4`}>
+                <div className="min-w-88 max-w-lg">
+                    <div className="relative max-w-[450px] h-[300px]">
                         <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
-                            className="w-full aspect-video object-cover rounded-md"
+                            className="object-cover rounded-md"
                         />
                     </div>
                 </div>
-                <div className="md:col-span-2 col-span-1">
+                <div className="">
                     <h2 className="text-3xl font-semibold">{item.name}</h2>
                     <p className="text-muted-foreground text-sm line-clamp-4 mt-1">{item.description}</p>
 
