@@ -1,5 +1,6 @@
 import { Item } from "@/app/api/items/items.api";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Landmark, ShoppingCart } from "lucide-react";
 import Image from "next/image";
@@ -12,11 +13,11 @@ interface DetailItemProps {
 export const DetailItem = ({ item, isMobile = false }: DetailItemProps) => {
     return (
         <div
-            className={`mt-12 mx-auto bg-white ${isMobile ? "w-[300px] h-[700px] overflow-auto" : "max-w-screen-2xl"}`}
+            className={`mx-auto bg-white ${isMobile ? "w-[300px] h-[700px] overflow-auto" : "max-w-screen-2xl"}`}
         >
-            <div className={`${isMobile ? "" : "flex gap-4"} mt-4`}>
-                <div className="min-w-88 max-w-lg">
-                    <div className="relative max-w-[450px] h-[300px]">
+            <div className={`${isMobile ? "" : "grid grid-cols-1 md:grid-cols-4  gap-4"} mt-4`}>
+                <div className="md:col-span-2">
+                    <div className="relative h-[300px]">
                         <Image
                             src={item.imageUrl}
                             alt={item.name}
@@ -24,24 +25,7 @@ export const DetailItem = ({ item, isMobile = false }: DetailItemProps) => {
                             className="object-cover rounded-md"
                         />
                     </div>
-                </div>
-                <div className="">
-                    <h2 className="text-3xl font-semibold">{item.name}</h2>
-                    <p className="text-muted-foreground text-sm line-clamp-4 mt-1">{item.description}</p>
-
-                    <div>
-                        <ul className="list-disc list-inside mt-4">
-                            <li className="tracking-tight leading-6">Chất liệu cao cấp</li>
-                            <li className="tracking-tight leading-6">Thiết kế tinh tế</li>
-                            <li className="tracking-tight leading-6">Độ bền cao</li>
-                            <li className="tracking-tight leading-6">Giá cả hợp lý</li>
-                            <li className="tracking-tight leading-6">Phù hợp với mọi lứa tuổi</li>
-                            <li className="tracking-tight leading-6">Giao hàng nhanh chóng</li>
-                        </ul>
-                    </div>
-                    <p className="pt-4">Chiếc xe được đại đa số người chơi ưa chuộng vì ngoại hình đẹp, tốc độ cao. Có một mẹo khi lái xe nhấn X sẽ có thể focus on field.</p>
-
-                    <div className="grid grid-cols-2 gap-2 mt-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
                         <Button variant="default">
                             <ShoppingCart className="mr-2" />
                             Thêm vào giỏ hàng
@@ -51,6 +35,26 @@ export const DetailItem = ({ item, isMobile = false }: DetailItemProps) => {
                             Chuyển khoản
                         </Button>
                     </div>
+                </div>
+                <div className="md:col-span-2">
+                    <h2 className="text-3xl font-semibold">{item.name}</h2>
+                    <p className="text-muted-foreground text-sm line-clamp-4 mt-1">{item.description}</p>
+                    <div className="w-2/3">
+                        <div className="flex items-center gap-2">
+
+                        </div>
+                    </div>
+                    <div>
+                        <ul className="list-disc list-inside mt-4 text-sm">
+                            <li className="tracking-tight leading-6">Chất liệu cao cấp</li>
+                            <li className="tracking-tight leading-6">Thiết kế tinh tế</li>
+                            <li className="tracking-tight leading-6">Độ bền cao</li>
+                            <li className="tracking-tight leading-6">Giá cả hợp lý</li>
+                            <li className="tracking-tight leading-6">Phù hợp với mọi lứa tuổi</li>
+                            <li className="tracking-tight leading-6">Giao hàng nhanh chóng</li>
+                        </ul>
+                    </div>
+                    <p className="pt-4 text-sm">Chiếc xe được đại đa số người chơi ưa chuộng vì ngoại hình đẹp, tốc độ cao. Có một mẹo khi lái xe nhấn X sẽ có thể focus on field.</p>
                 </div>
             </div>
 

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 
 const InputSearch = () => {
   return (
-    <div className="relative  sm:min-w-sm">
+    <div className="relative sm:min-w-sm">
       <Input type="text" placeholder="Tìm kiếm ..." />
       <Badge
         variant="secondary"
