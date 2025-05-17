@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { headers } from "next/headers"
 
-interface HomeBreadcumbProps {
-  label: string,
-  params: string,
-}
+// interface HomeBreadcumbProps {
+//   label: string,
+//   params: string,
+// }
 
 const getPath = async () => {
   const header = await headers()
@@ -26,7 +26,7 @@ const getPath = async () => {
 }
 
 
-export async function HomeBreadcumb({ label, params }: HomeBreadcumbProps) {
+export async function HomeBreadcumb() {
   getPath()
   return (
     <Breadcrumb className="p-4 -mb-4 sticky top-16 z-10 bg-white">
