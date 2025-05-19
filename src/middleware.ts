@@ -61,4 +61,19 @@ export const config = {
     // Always run for API routes
     "/(api|trpc)(.*)",
   ],
+  headers: [
+    {
+      source: '/(.*)',
+      headers: [
+        {
+          key: 'X-Frame-Options',
+          value: 'ALLOWALL',
+        },
+        {
+          key: 'Content-Security-Policy',
+          value: "default-src * 'self' data: blob: 'unsafe-inline' 'unsafe-eval'",
+        },
+      ],
+    },
+  ],
 };
