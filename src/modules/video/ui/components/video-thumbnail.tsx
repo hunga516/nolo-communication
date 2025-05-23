@@ -8,7 +8,7 @@ import { THUMBNAIL_FALLBACK } from "../../constants"
 interface VideoThumbnailProps {
     imageUrl?: string | null
     title: string
-    duration: number | null
+    duration?: number | null
     previewUrl?: string | null
 }
 

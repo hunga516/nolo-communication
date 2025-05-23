@@ -38,8 +38,8 @@ const navMain = [
     isActive: false,
   },
   {
-    title: "Vi Short",
-    url: "/vi-short",
+    title: "Live Stream",
+    url: "/live-stream",
     icon: MonitorPlay,
   },
   {

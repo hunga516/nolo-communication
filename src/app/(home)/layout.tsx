@@ -14,7 +14,9 @@ const Layout = ({ children }: LayoutProps) => {
         <HomeNavbar />
         <div className="max-w-screen-2xl mx-auto mt-16">
           <HomeBreadcumb />
-          {children}
+          <div className="mt-8">
+            {children}
+          </div>
         </div>
       </div>
       <Command />

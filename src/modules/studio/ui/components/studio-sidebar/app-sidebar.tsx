@@ -54,6 +54,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
+                <SidebarMenuButton isActive={pathname === "/studio/thong-ke"} asChild>
+                  <Link href="/studio/thong-ke">
+                    <VideoIcon className="size-5" />
+                    Dashboard
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton isActive={pathname === "/studio"} asChild>
                   <Link href="/studio">
                     <VideoIcon className="size-5" />
@@ -61,6 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+
               <Separator />
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
