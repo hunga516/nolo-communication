@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { VideoGetOneOutput } from "@/modules/video/types";
 
 interface StudioSidebarUserProps {
-  userOut?: VideoGetOneOutput['user']
+  userOut?: Partial<VideoGetOneOutput['user']>
   size: number
   place: "bottom" | "left"
 }

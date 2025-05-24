@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 interface SubscriptionButtonProps {
     onClick: () => void;
     disabled?: boolean;
-    isSubscribed: boolean;
+    isSubscribed?: boolean;
     className?: string;
     size: "default" | "sm" | "lg";
 }

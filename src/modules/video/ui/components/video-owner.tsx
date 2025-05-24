@@ -10,16 +10,16 @@ import { useSubscription } from "@/modules/subscriptions/hooks/useSupscription";
 
 
 interface VideoOwnerProps {
-    user: VideoGetOneOutput['user']
-    videoId: string,
-    subscriberCount: number
+    user: Partial<VideoGetOneOutput['user']>
+    videoId?: string,
+    subscriberCount?: number
 }
 
 export const VideoOwner = ({ user, videoId, subscriberCount }: VideoOwnerProps) => {
     const { userId, isLoaded } = useAuth();
     const { isPending, handleSubscription } = useSubscription({
-        userId: user.id,
-        isSubscribed: user.isSubscriberSubscribed,
+        userId: user.id ?? "",
+        isSubscribed: user.isSubscriberSubscribed ?? false,
         fromVideoId: videoId
     })
 

@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import axiosInstance from "../../axios";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.CLERK_SIGNING_SECRET;
@@ -61,9 +62,18 @@ export async function POST(req: Request) {
       clerkId: data.id,
       name: `${data.first_name} ${data.last_name}`,
       imageUrl: data.image_url,
-      email: data.image_url ?? "", // Tránh lỗi nếu email không tồn tại
-      age: 18, // Gán giá trị mặc định cho age
+      email: data.image_url ?? "",
+      age: 18,
     });
+
+    await axiosInstance.post('/auth/register', {
+      clerkId: data.id,
+      name: `${data.first_name} ${data.last_name}`,
+      imageUrl: data.image_url,
+      email: data.email_addresses[0].email_address ?? "default email",
+      username: data.email_addresses[0].email_address ?? "default username",
+      password: "123456"
+    })
   }
 
   if (eventType === "user.deleted") {
