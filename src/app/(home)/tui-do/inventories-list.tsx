@@ -35,7 +35,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { readAllInventoriesByClerkId } from "@/app/api/inventories/inventories"
+import { readAllInventoriesByClerkId } from "@/app/api/inventories/inventories.api"
 import { useAuth } from "@clerk/nextjs"
 import Image from "next/image"
 
