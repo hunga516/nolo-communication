@@ -1,7 +1,8 @@
 import { readUserByClerkId } from "@/app/api/users/users.api"
 import { readVideoById } from "@/app/api/videos/videos.api"
-import { VideoOwner } from "@/modules/video/ui/components/video-owner"
-import VideoPlayer from "@/modules/video/ui/components/video-player"
+import RealTimeChat from "@/components/video/realtime-chat"
+import { VideoOwner } from "@/components/video/video-owner"
+import VideoPlayer from "@/components/video/video-player"
 
 
 interface PageProps {
@@ -10,12 +11,8 @@ interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
     const { videoId } = await params
-
     const { video } = await readVideoById(videoId)
-    console.log(video);
-
     const { user } = await readUserByClerkId(video.clerkId)
-    console.log(user);
 
 
     return (
@@ -30,7 +27,7 @@ const Page = async ({ params }: PageProps) => {
                     <h2 className="text-lg text-black/80 font-semibold">
                         {video.name}
                     </h2>
-                    <div>
+                    <div className="mt-2">
                         <VideoOwner
                             user={user}
                         />
@@ -38,7 +35,7 @@ const Page = async ({ params }: PageProps) => {
                 </div>
             </div>
             <div>
-                test doanh muc
+                <RealTimeChat videoId={video._id} />
             </div>
         </div>
     )

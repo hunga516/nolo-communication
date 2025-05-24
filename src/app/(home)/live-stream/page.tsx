@@ -1,5 +1,7 @@
 import { readAllVideos } from "@/app/api/videos/videos.api"
-import { VideoThumbnail } from "@/modules/video/ui/components/video-thumbnail"
+import CreateLiveStream from "@/components/video/create-live-stream"
+
+import { VideoThumbnail } from "@/components/video/video-thumbnail"
 import Link from "next/link"
 
 
@@ -9,7 +11,10 @@ const Page = async () => {
 
     return (
         <div className="px-4">
-            <h1 className="text-xl font-bold">
+            <div>
+                <CreateLiveStream />
+            </div>
+            <h1 className="text-xl font-bold mt-8">
                 Đang trực tuyến
             </h1>
 

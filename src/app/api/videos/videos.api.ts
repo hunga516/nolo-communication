@@ -10,6 +10,7 @@ export interface Video {
     type: string,
     muxPreviewUrl: string,
     muxThumbnailUrl: string,
+    muxStreamKey: string,
     createdAt: string,
     updatedAt: string
 }
@@ -49,5 +50,22 @@ export const readVideoById = async (_id: string): Promise<VideoResponse> => {
     } catch (error) {
         console.log(error);
         throw new Error('Error when reading details video')
+    }
+}
+
+export const createVideoLiveStream = async (name: string, clerkId: string): Promise<VideoResponse> => {
+    try {
+        const response = await axiosInstance.post(`/videos/live-streams`, {
+            name,
+            clerkId
+        })
+
+        return {
+            message: "tao streaming thanh cong",
+            video: response.data
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error when start streaming')
     }
 }
