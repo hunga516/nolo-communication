@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Charts } from "./components/charts";
 import { trpc } from "@/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import {useRef, useEffect } from "react";
 
 export default function Page() {
     // TODO: Lấy id thực tế từ user context hoặc props, tạm hardcode để không lỗi

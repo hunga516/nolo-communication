@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
-import { videosTable, categoriesTable, videoViews } from "@/db/schema";
+import { videosTable } from "@/db/schema";
 import { z } from "zod";
 import { and, or, eq, lt, desc, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -82,7 +82,7 @@ export const studioRouter = createTRPCRouter({
     }),
   statistics: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const userId = input.id;
       // Đếm tổng số video của user này
       const [{ count: totalVideos } = { count: 0 }] = await db
