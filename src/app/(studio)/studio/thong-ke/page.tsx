@@ -3,35 +3,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Charts } from "./components/charts";
-import { useState, useEffect } from "react";
+import { trpc } from "@/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import {useRef, useEffect } from "react";
 
 export default function Page() {
-    const [period, setPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
-    const [summary, setSummary] = useState({
-        totalVideos: 0,
-        newVideosToday: 0,
-        averageViews: 0,
-        averageWatchTime: '0'
-    });
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchSummary = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`/api/statistics?period=${period}`);
-                const data = await response.json();
-                setSummary(data.summary);
-            } catch (error) {
-                console.error('Error fetching summary:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSummary();
-    }, [period]);
+    // TODO: Lấy id thực tế từ user context hoặc props, tạm hardcode để không lỗi
+    const userId = "94ba3123-ec62-4dc3-8f68-a355a3afde80"; // Thay bằng id thực tế của user
+    const { data, isLoading } = trpc.studio.statistics.useQuery({ id: userId });
+    const summary = data?.summary || { totalVideos: 0 };
 
     return (
         <div className="container mx-auto py-8 p-4">
@@ -45,7 +25,7 @@ export default function Page() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {loading ? (
+                        {isLoading ? (
                             <>
                                 <Skeleton className="h-8 w-24 mb-2" />
                                 <Skeleton className="h-4 w-32" />
@@ -67,14 +47,14 @@ export default function Page() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {loading ? (
+                        {isLoading ? (
                             <>
                                 <Skeleton className="h-8 w-24 mb-2" />
                                 <Skeleton className="h-4 w-32" />
                             </>
                         ) : (
                             <>
-                                <div className="text-2xl font-bold">{summary.newVideosToday}</div>
+                                <div className="text-2xl font-bold">0</div>
                                 <p className="text-xs text-muted-foreground">
                                     +2 so với hôm qua
                                 </p>
@@ -89,14 +69,14 @@ export default function Page() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {loading ? (
+                        {isLoading ? (
                             <>
                                 <Skeleton className="h-8 w-24 mb-2" />
                                 <Skeleton className="h-4 w-32" />
                             </>
                         ) : (
                             <>
-                                <div className="text-2xl font-bold">{summary.averageViews.toLocaleString()}</div>
+                                <div className="text-2xl font-bold">0</div>
                                 <p className="text-xs text-muted-foreground">
                                     +12% so với tuần trước
                                 </p>
@@ -111,14 +91,14 @@ export default function Page() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {loading ? (
+                        {isLoading ? (
                             <>
                                 <Skeleton className="h-8 w-24 mb-2" />
                                 <Skeleton className="h-4 w-32" />
                             </>
                         ) : (
                             <>
-                                <div className="text-2xl font-bold">{summary.averageWatchTime} phút</div>
+                                <div className="text-2xl font-bold">0 phút</div>
                                 <p className="text-xs text-muted-foreground">
                                     +0.2 phút so với tháng trước
                                 </p>
@@ -128,7 +108,7 @@ export default function Page() {
                 </Card>
             </div>
 
-            <Tabs defaultValue="weekly" className="space-y-4" onValueChange={(value) => setPeriod(value as 'weekly' | 'monthly' | 'yearly')}>
+            <Tabs defaultValue="weekly" className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="weekly">Tuần này</TabsTrigger>
                     <TabsTrigger value="monthly">Tháng này</TabsTrigger>

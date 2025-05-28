@@ -1,8 +1,8 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
-import { videosTable } from "@/db/schema";
+import { videosTable, categoriesTable, videoViews } from "@/db/schema";
 import { z } from "zod";
-import { and, or, eq, lt, desc } from "drizzle-orm";
+import { and, or, eq, lt, desc, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 export const studioRouter = createTRPCRouter({
@@ -78,6 +78,21 @@ export const studioRouter = createTRPCRouter({
       return {
         items,
         nextCursor,
+      };
+    }),
+  statistics: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = input.id;
+      // Đếm tổng số video của user này
+      const [{ count: totalVideos } = { count: 0 }] = await db
+        .select({ count: sql`count(*)::int` })
+        .from(videosTable)
+        .where(eq(videosTable.userId, userId));
+      return {
+        summary: {
+          totalVideos: Number(totalVideos)
+        }
       };
     }),
 });
