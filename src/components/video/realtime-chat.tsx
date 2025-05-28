@@ -92,7 +92,7 @@ const RealTimeChat = ({ videoId }: RealTimeChatProps) => {
                 onChange={(e) => setMessageSend(e.target.value)}
             />
             <Button onClick={handleSubmit}>
-                Submit
+                Gửi
             </Button>
         </div >
     )

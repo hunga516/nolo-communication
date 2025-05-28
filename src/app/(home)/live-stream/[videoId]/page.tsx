@@ -34,7 +34,7 @@ const Page = async ({ params }: PageProps) => {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="mt-24 sm:mt-0">
                 <RealTimeChat videoId={video._id} />
             </div>
         </div>
