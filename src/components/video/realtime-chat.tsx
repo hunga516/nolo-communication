@@ -21,6 +21,7 @@ interface Message {
 
 const RealTimeChat = ({ videoId }: RealTimeChatProps) => {
     const { user } = useClerk()
+    const clerkClient = useClerk()
     const pathName = usePathname()
     const [messages, setMessages] = useState<Message[]>([])
     const [messageSend, setMessageSend] = useState<string>('')
@@ -54,6 +55,11 @@ const RealTimeChat = ({ videoId }: RealTimeChatProps) => {
     }, [messages])
 
     const handleSubmit = () => {
+        if (!user) {
+            clerkClient.openSignIn({ redirectUrl: pathName })
+            return
+        }
+
         if (messageSend.trim()) {
             socketRef.current?.emit('create-message', { messageSend, userSendImage: user?.imageUrl })
             setMessageSend('')

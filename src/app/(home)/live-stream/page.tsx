@@ -18,7 +18,7 @@ const Page = async () => {
                 Đang trực tuyến
             </h1>
 
-            <div className="grid grid-cols-4 gap-4 mt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
                 {videos.map((video, index) => (
                     <Link key={index} href={`/live-stream/${video._id}`}>
                         <VideoThumbnail
