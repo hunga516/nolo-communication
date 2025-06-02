@@ -77,12 +77,9 @@ export async function POST(req: Request) {
         password: "123456"
       });
 
-      console.log("Register API response:", response.data);
-      console.log("Updating metadata for Clerk user:", data.id);
-
       await clerkClient.users.updateUserMetadata(data.id, {
         publicMetadata: {
-          userId: response.data._id
+          userId: response.data.userId
         }
       });
     } catch (err) {
