@@ -1,14 +1,14 @@
 import { Item, readAllItems } from "@/app/api/items/items.api";
 import ImagesCarousel from "@/components/images-carousel";
+import QrCodeModal from "@/components/qr-code-moda";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import AuthButton from "@/modules/auth/ui/components/auth-button";
 import ItemsCategory from "@/modules/category/ui/components/items-category";
-import { Landmark, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -56,24 +56,7 @@ export const DetailItem = async ({ item, isMobile = false }: DetailItemProps) =>
                             <ShoppingCart className="mr-2" />
                             Thêm vào giỏ hàng
                         </Button>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" >
-                                    <Landmark className="mr-2" />
-                                    Chuyển khoản
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="flex items-center justify-center">
-                                <div className="relative size-[500px]">
-                                    <Image
-                                        src={`https://img.vietqr.io/image/970416-28307897-print.png?amount=${Number(item.price + 0)}&addInfo=${item.name + "aasd"}&accountName=LE%20NGOC%20LOC`}
-                                        alt="qrcode"
-                                        fill
-                                        className="object-contain"
-                                    />
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+                        <QrCodeModal name={item.name} price={item.price} />
                     </div>
                 </div>
                 <div className="col-span-2 xl:col-span-1 xl:ml-20">

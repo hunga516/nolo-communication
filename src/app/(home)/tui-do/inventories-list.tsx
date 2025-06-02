@@ -36,8 +36,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { readAllInventoriesByUserId } from "@/app/api/inventories/inventories.api"
-import { useAuth } from "@clerk/nextjs"
 import Image from "next/image"
+import { useUser } from "@clerk/nextjs"
 
 export type Inventory = {
     _id: string
@@ -179,11 +179,11 @@ export function InventoryList() {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
     const [inventories, setInventories] = React.useState<Inventory[]>([])
-    const { userId } = useAuth()
-
+    const { user } = useUser()
+    const userId = user?.publicMetadata.userId as string
     React.useEffect(() => {
         const fetchData = async () => {
-            if (!userId) return
+            if (!user) return
 
             try {
                 const { inventories: apiInventories } = await readAllInventoriesByUserId(userId)
@@ -201,7 +201,7 @@ export function InventoryList() {
         }
 
         fetchData()
-    }, [userId])
+    }, [user, userId])
 
     const table = useReactTable({
         data: inventories,

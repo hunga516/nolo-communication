@@ -64,7 +64,7 @@ export async function POST(req: Request) {
         clerkId: data.id,
         name: `${data.first_name} ${data.last_name}`,
         imageUrl: data.image_url,
-        email: data.image_url ?? "",
+        email: data.email_addresses[0].email_address ?? "",
         age: 18,
       });
 
@@ -75,15 +75,18 @@ export async function POST(req: Request) {
         email: data.email_addresses[0].email_address ?? "default email",
         username: data.email_addresses[0].email_address ?? "default username",
         password: "123456"
-      })
+      });
+
+      console.log("Register API response:", response.data);
+      console.log("Updating metadata for Clerk user:", data.id);
 
       await clerkClient.users.updateUserMetadata(data.id, {
         publicMetadata: {
           userId: response.data._id
         }
-      })
-    } catch {
-      console.log("Error when register");
+      });
+    } catch (err) {
+      console.log("Error when register", err);
     }
   }
 
