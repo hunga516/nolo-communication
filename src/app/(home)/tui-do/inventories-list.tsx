@@ -180,13 +180,13 @@ export function InventoryList() {
     const [rowSelection, setRowSelection] = React.useState({})
     const [inventories, setInventories] = React.useState<Inventory[]>([])
     const { user } = useUser()
-    const userId = user?.publicMetadata.userId as string
+    const user_id = user?.publicMetadata.user_id as string
     React.useEffect(() => {
         const fetchData = async () => {
             if (!user) return
 
             try {
-                const { inventories: apiInventories } = await readAllInventoriesByUserId(userId)
+                const { inventories: apiInventories } = await readAllInventoriesByUserId(user_id)
                 // Transform the API response to match our Inventory type
                 const transformedInventories: Inventory[] = apiInventories.map(inv => ({
                     ...inv,
@@ -201,7 +201,7 @@ export function InventoryList() {
         }
 
         fetchData()
-    }, [user, userId])
+    }, [user, user_id])
 
     const table = useReactTable({
         data: inventories,

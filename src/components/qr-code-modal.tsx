@@ -26,7 +26,7 @@ const QrCodeModal = ({ name, price }: QrCodeModalProps) => {
             <DialogContent className="flex items-center justify-center">
                 <div className="relative size-[500px]">
                     <Image
-                        src={`https://img.vietqr.io/image/970416-28307897-print.png?amount=${Number(price + 0)}&addInfo=${name + userId}&accountName=LE%20NGOC%20LOC`}
+                        src={`https://img.vietqr.io/image/970416-28307897-print.png?amount=${Number(price + 0)}&addInfo=${name + " " + userId}&accountName=LE%20NGOC%20LOC`}
                         alt="qrcode"
                         fill
                         className="object-contain"

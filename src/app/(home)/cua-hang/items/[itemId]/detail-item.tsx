@@ -1,6 +1,6 @@
 import { Item, readAllItems } from "@/app/api/items/items.api";
 import ImagesCarousel from "@/components/images-carousel";
-import QrCodeModal from "@/components/qr-code-moda";
+import QrCodeModal from "@/components/qr-code-modal";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { ScrollArea } from "@/components/ui/scroll-area";
