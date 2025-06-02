@@ -21,9 +21,9 @@ interface InventoriesResponse {
 }
 
 
-export const readAllInventoriesByClerkId = async (clerkId: string): Promise<InventoriesResponse> => {
+export const readAllInventoriesByUserId = async (userId: string): Promise<InventoriesResponse> => {
     try {
-        const response = await axiosInstance.get(`/inventories/${clerkId}`)
+        const response = await axiosInstance.get(`/inventories/${userId}`)
         return {
             message: response.data.message,
             inventories: response.data.inventories

@@ -2,6 +2,7 @@ import { Item, readAllItems } from "@/app/api/items/items.api";
 import ImagesCarousel from "@/components/images-carousel";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,7 +25,7 @@ export const DetailItem = async ({ item, isMobile = false }: DetailItemProps) =>
         <div
             className={`mx-auto md:px-12 bg-white ${isMobile ? "w-[300px] h-[700px] overflow-auto" : "max-w-screen-2xl"}`}
         >
-            <div className={`${isMobile ? "" : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"} mt-4`}>
+            <div className={`${isMobile ? "" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6"} mt-4`}>
                 <div className="">
                     <div className="relative h-[300px]">
                         <Image
@@ -55,19 +56,25 @@ export const DetailItem = async ({ item, isMobile = false }: DetailItemProps) =>
                             <ShoppingCart className="mr-2" />
                             Thêm vào giỏ hàng
                         </Button>
-                        <Button variant="outline" >
-                            <Landmark className="mr-2" />
-                            Chuyển khoản
-                        </Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" >
+                                    <Landmark className="mr-2" />
+                                    Chuyển khoản
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="flex items-center justify-center">
+                                <div className="relative size-[500px]">
+                                    <Image
+                                        src={`https://img.vietqr.io/image/970416-28307897-print.png?amount=${Number(item.price + 0)}&addInfo=${item.name + "aasd"}&accountName=LE%20NGOC%20LOC`}
+                                        alt="qrcode"
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
-                    {/* <div className="relative w-full h-[400px] mt-12">
-                        <Image
-                            src={`https://img.vietqr.io/image/970416-28307897-print.png?amount=${Number(item.price + 0)}&addInfo=${item.name}&accountName=LE%20NGOC%20LOC`}
-                            alt="qrcode"
-                            fill
-                            className="object-contain"
-                        />
-                    </div> */}
                 </div>
                 <div className="col-span-2 xl:col-span-1 xl:ml-20">
                     <Tabs defaultValue="tat-ca">

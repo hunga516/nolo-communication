@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import axiosInstance from "../../axios";
+import { clerkClient } from "@/lib/clerk";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.CLERK_SIGNING_SECRET;
@@ -58,22 +59,32 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { data } = evt;
 
-    await db.insert(usersTable).values({
-      clerkId: data.id,
-      name: `${data.first_name} ${data.last_name}`,
-      imageUrl: data.image_url,
-      email: data.image_url ?? "",
-      age: 18,
-    });
+    try {
+      await db.insert(usersTable).values({
+        clerkId: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        imageUrl: data.image_url,
+        email: data.image_url ?? "",
+        age: 18,
+      });
 
-    await axiosInstance.post('/auth/register', {
-      clerkId: data.id,
-      name: `${data.first_name} ${data.last_name}`,
-      imageUrl: data.image_url,
-      email: data.email_addresses[0].email_address ?? "default email",
-      username: data.email_addresses[0].email_address ?? "default username",
-      password: "123456"
-    })
+      const response = await axiosInstance.post('/auth/register', {
+        clerkId: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        imageUrl: data.image_url,
+        email: data.email_addresses[0].email_address ?? "default email",
+        username: data.email_addresses[0].email_address ?? "default username",
+        password: "123456"
+      })
+
+      await clerkClient.users.updateUserMetadata(data.id, {
+        publicMetadata: {
+          userId: response.data._id
+        }
+      })
+    } catch {
+      console.log("Error when register");
+    }
   }
 
   if (eventType === "user.deleted") {

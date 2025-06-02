@@ -35,7 +35,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { readAllInventoriesByClerkId } from "@/app/api/inventories/inventories.api"
+import { readAllInventoriesByUserId } from "@/app/api/inventories/inventories.api"
 import { useAuth } from "@clerk/nextjs"
 import Image from "next/image"
 
@@ -186,7 +186,7 @@ export function InventoryList() {
             if (!userId) return
 
             try {
-                const { inventories: apiInventories } = await readAllInventoriesByClerkId(userId)
+                const { inventories: apiInventories } = await readAllInventoriesByUserId(userId)
                 // Transform the API response to match our Inventory type
                 const transformedInventories: Inventory[] = apiInventories.map(inv => ({
                     ...inv,
