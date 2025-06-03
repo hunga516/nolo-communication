@@ -11,11 +11,11 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import { NavMain } from "@/modules/home/ui/components/home-sidebar/nav-main";
-import { NavUtils } from "@/modules/home/ui/components/home-sidebar/nav-utils";
+import { NavMain } from "@/components/home/home-sidebar/nav-community";
+import { NavUtils } from "@/components/home/home-sidebar/nav-utils";
 import Image from "next/image";
 import Link from "next/link";
-import { JobSwitcher } from "@/modules/home/ui/components/home-sidebar/team-switcher";
+import { JobSwitcher } from "@/components/home/home-sidebar/job-switcher";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open } = useSidebar();

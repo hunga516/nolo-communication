@@ -35,51 +35,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { readAllInventoriesByUserId } from "@/app/api/inventories/inventories.api"
 import Image from "next/image"
-import { useUser } from "@clerk/nextjs"
+import { readAllMarkets, Market } from "@/app/api/markets/markets.api"
 
-export type Inventory = {
-    _id: string
-    itemId: {
-        _id: string
-        name: string
-        description: string
-        imageUrl: string
-        price: number
-        createdAt: string
-        updatedAt: string
-    }
-    userId: string
-    clerkId: string
-    quantity: number
-    createdAt: string
-    updatedAt: string
-}
-
-export const columns: ColumnDef<Inventory>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
+export const columns: ColumnDef<Market>[] = [
     {
         accessorKey: "Ảnh",
         header: "",
@@ -114,6 +73,30 @@ export const columns: ColumnDef<Inventory>[] = [
         cell: ({ row }) => <div>{row.original.itemId.name}</div>,
     },
     {
+        accessorKey: "Người bán",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Người bán
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="flex items-center gap-2">
+            <Image
+                width={20}
+                height={20}
+                src={row.original.userId.imageUrl}
+                alt={row.original.userId.name}
+                className="object-cover rounded-md"
+            />
+            <div className="text-sm font-medium">{row.original.userId.name}</div>
+        </div>,
+    },
+    {
         accessorKey: "quantity",
         header: ({ column }) => {
             return (
@@ -126,28 +109,37 @@ export const columns: ColumnDef<Inventory>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
+        cell: ({ row }) => <div>{row.original.quantity}</div>,
     },
     {
-        accessorKey: "Giá tiền",
-        header: () => <div className="text-right">Giá trị /1</div>,
+        accessorKey: "Giá bán",
+        header: () => <div className="text-right">Giá bán /1</div>,
         cell: ({ row }) => {
-            const price = row.original.itemId.price
-
+            const price = row.original.price
             const formatted = new Intl.NumberFormat("vi-VN", {
                 style: "currency",
                 currency: "VND",
             }).format(price)
-
             return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "Tổng đơn hàng",
+        header: () => <div className="text-right">Tổng đơn hàng</div>,
+        cell: ({ row }) => {
+            const total = row.original.price * row.original.quantity
+            const formatted = new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            }).format(total)
+            return <div className="text-right font-semibold text-primary">{formatted}</div>
         },
     },
     {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const inventory = row.original
-
+            const market = row.original
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -159,13 +151,12 @@ export const columns: ColumnDef<Inventory>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Hành động</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(inventory._id)}
+                            onClick={() => navigator.clipboard.writeText(market._id)}
                         >
-                            Sao chép ID vật phẩm
+                            Sao chép ID giao dịch
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Xem chi tiết</DropdownMenuItem>
-                        <DropdownMenuItem>Sửa</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -173,38 +164,27 @@ export const columns: ColumnDef<Inventory>[] = [
     },
 ]
 
-export function InventoryList() {
+export function MarketsList() {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
-    const [inventories, setInventories] = React.useState<Inventory[]>([])
-    const { user } = useUser()
-    const user_id = user?.publicMetadata.user_id as string
+    const [markets, setMarkets] = React.useState<Market[]>([])
+
     React.useEffect(() => {
         const fetchData = async () => {
-            if (!user) return
-
             try {
-                const { inventories: apiInventories } = await readAllInventoriesByUserId(user_id)
-                // Transform the API response to match our Inventory type
-                const transformedInventories: Inventory[] = apiInventories.map(inv => ({
-                    ...inv,
-                    itemId: typeof inv.itemId === 'string'
-                        ? JSON.parse(inv.itemId)
-                        : inv.itemId
-                }))
-                setInventories(transformedInventories)
+                const { markets: apiMarkets } = await readAllMarkets()
+                setMarkets(apiMarkets)
             } catch (error) {
-                console.error("Error fetching inventories:", error)
+                console.error("Error fetching markets:", error)
             }
         }
-
         fetchData()
-    }, [user, user_id])
+    }, [])
 
     const table = useReactTable({
-        data: inventories,
+        data: markets,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -224,7 +204,7 @@ export function InventoryList() {
 
     return (
         <div className="w-full">
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-4 gap-2">
                 <Input
                     placeholder="Tìm bằng tên vật phẩm ..."
                     value={(table.getColumn("Tên vật phẩm")?.getFilterValue() as string) ?? ""}
@@ -301,7 +281,7 @@ export function InventoryList() {
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    Không có dữ liệu.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -334,4 +314,4 @@ export function InventoryList() {
             </div>
         </div>
     )
-}
+} 

@@ -79,8 +79,8 @@ const navMain = [
         auth: true,
       },
       {
-        title: "Mua bán",
-        url: "/giao-dich/mua-ban",
+        title: "Chợ",
+        url: "/giao-dich/cho",
         auth: true,
       },
     ],
