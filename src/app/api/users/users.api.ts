@@ -8,6 +8,7 @@ export interface User {
     imageUrl: string,
     username: string,
     clerkId: string,
+    coins: number,
     subscriberCount: number,
     isSubscriberSubscribed: boolean,
 }
