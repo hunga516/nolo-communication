@@ -13,16 +13,15 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
+import { useState } from "react"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogHeader, DialogClose } from "@/components/ui/dialog"
 
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -35,7 +34,48 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import Image from "next/image"
-import { readAllMarkets, Market } from "@/app/api/markets/markets.api"
+import { readAllMarkets, Market, purchaseMarket } from "@/app/api/markets/markets.api"
+import { toast } from "sonner"
+import { useUser } from "@clerk/nextjs"
+
+function MarketActionCell({ market }: { market: Market }) {
+    const [open, setOpen] = useState(false)
+    const { user } = useUser()
+    const handleBuy = async () => {
+        console.log(user?.publicMetadata.user_id as string, market.itemId._id, market._id);
+
+        try {
+            await purchaseMarket(user?.publicMetadata.user_id as string, market.itemId._id, market._id)
+            toast.success("Mua vật phẩm thành công!")
+        } catch (error) {
+            console.error("Error buying market item:", error)
+            toast.error("Đã có lỗi xảy ra khi mua vật phẩm này. Vui lòng thử lại sau.")
+            return
+        }
+        setOpen(false)
+    }
+    return (
+        <>
+            <Button variant="default" className="h-8 px-4" onClick={() => setOpen(true)}>
+                Mua
+            </Button>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Xác nhận mua</DialogTitle>
+                        <DialogDescription>Bạn có chắc muốn mua vật phẩm này không?</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="default" onClick={handleBuy}>Xác nhận</Button>
+                        <DialogClose asChild>
+                            <Button variant="outline">Hủy</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    )
+}
 
 export const columns: ColumnDef<Market>[] = [
     {
@@ -137,29 +177,7 @@ export const columns: ColumnDef<Market>[] = [
     {
         id: "actions",
         enableHiding: false,
-        cell: ({ row }) => {
-            const market = row.original
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(market._id)}
-                        >
-                            Sao chép ID giao dịch
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Xem chi tiết</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
+        cell: ({ row }) => <MarketActionCell market={row.original} />,
     },
 ]
 

@@ -7,11 +7,12 @@ import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 
 interface QrCodeModalProps {
+    label: string
     name: string
     price: number
 }
 
-const QrCodeModal = ({ name, price }: QrCodeModalProps) => {
+const QrCodeModal = ({ label, name, price }: QrCodeModalProps) => {
     const { user } = useUser()
     const userId = user?.publicMetadata.userId as string
 
@@ -20,7 +21,7 @@ const QrCodeModal = ({ name, price }: QrCodeModalProps) => {
             <DialogTrigger asChild>
                 <Button variant="outline" >
                     <Landmark className="mr-2" />
-                    Chuyển khoản
+                    {label}
                 </Button>
             </DialogTrigger>
             <DialogContent className="flex items-center justify-center">

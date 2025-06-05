@@ -1,3 +1,5 @@
+'use client';
+
 import { User } from '@/app/api/users/users.api';
 import { createContext, useState, useContext, ReactNode } from 'react';
 

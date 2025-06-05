@@ -54,9 +54,9 @@ export const DetailItem = async ({ item, isMobile = false }: DetailItemProps) =>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-8">
                         <Button variant="default">
                             <ShoppingCart className="mr-2" />
-                            Thêm vào giỏ hàng
+                            Thêm giỏ hàng
                         </Button>
-                        <QrCodeModal name={item.name} price={item.price} />
+                        <QrCodeModal label={"Chuyển khoản"} name={item.name} price={item.price} />
                     </div>
                 </div>
                 <div className="col-span-2 xl:col-span-1 xl:ml-20">

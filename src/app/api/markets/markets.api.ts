@@ -14,10 +14,15 @@ export interface Market {
 
 interface MarketResponse {
     message: string
+    market: Market
+}
+
+interface MarketsResponse {
+    message: string
     markets: Market[]
 }
 
-export const readAllMarkets = async (): Promise<MarketResponse> => {
+export const readAllMarkets = async (): Promise<MarketsResponse> => {
     try {
         const response = await axiosInstance.get('/markets')
         return {
@@ -27,6 +32,40 @@ export const readAllMarkets = async (): Promise<MarketResponse> => {
     } catch (error) {
         console.log(error)
         throw new Error('Error reading markets')
+    }
+}
+
+export const createMarket = async (userId: string, itemId: string, price: number, quantity: number): Promise<MarketResponse> => {
+    try {
+        const response = await axiosInstance.post('/markets', {
+            userId,
+            itemId,
+            price,
+            quantity
+        })
+        return {
+            message: response.data.message,
+            market: response.data.markets
+        }
+    } catch (error) {
+        console.log(error)
+        throw new Error('Error reading market')
+    }
+}
+
+export const purchaseMarket = async (buyerId: string, itemId: string, marketId: string): Promise<MarketResponse> => {
+    try {
+        const response = await axiosInstance.post(`/markets/purchase/${marketId}`, {
+            buyerId,
+            itemId
+        })
+        return {
+            message: response.data.message,
+            market: response.data.market
+        }
+    } catch (error) {
+        console.log(error)
+        throw new Error('Error purchasing market')
     }
 }
 

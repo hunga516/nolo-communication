@@ -3,6 +3,7 @@ import axiosInstance from "../axios";
 
 export interface User {
     _id: string,
+    userId: number,
     name: string,
     email: string,
     imageUrl: string,
